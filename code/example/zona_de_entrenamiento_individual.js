@@ -1,11 +1,16 @@
-// Define the center point of the main rectangle
-var center = ee.Geometry.Point([-105.3, 20.7]); // Replace with your desired center coordinates
+// Centro de zona de referencia
+var center = ee.Geometry.Point([-105.3, 20.7]);
+var zone_id = 1;
+
+var center_multi = ee.Geometry.MultiPoint([[-105.3, 20.7],
+                                     [-105.35, 20.72]]);
 
 var proj = ee.Projection('EPSG:32613')
 print(proj);
 
 // Convert center point to metric projection
 var center_metric = center.transform(proj);
+var center_multi_metric = center_multi.transform(proj);
 
 // Define the dimensions of the main rectangle
 var mainWidth = 1000.0; // in m
@@ -42,6 +47,14 @@ print(topLeftY)
 //var mainRectangle = createRectangle(center_metric.coordinates().getInfo(), mainWidth, mainLength, proj);
 var mainRectangle = createRectangle(centerX, centerY, mainWidth, mainLength, proj);
 Map.addLayer(ee.Feature(mainRectangle), {color: 'blue'}, 'Rectangulo principal');
+
+//var centerX_multi = ee.Number(center_multi_metric.coordinates().get(0));
+//print(centerX_multi);
+//var topLeftX_multi = centerX_multi.map(function(coord) {
+//  return ee.Number(coord).subtract(mainWidth / 2);
+//});
+//print(topLeftX_multi);
+
 
 //var zones = ee.List([]);
 //for (var i = 1; i <= numZonesX; i++) {
@@ -96,7 +109,9 @@ var zones = zone_centers.map(function(zone) {
 print(zones);
 
 var zones_features = zones.map(function(zone) {
-  return ee.Feature(ee.Geometry(zone))
+  var index = zones.indexOf(zone);
+  index = index.add(1);
+  return ee.Feature(ee.Geometry(zone), {'zone':zone_id, 'subzone': index})
 });
 
 print(zones_features);
@@ -107,17 +122,16 @@ var zonesCollection = ee.FeatureCollection(
       zones_features
 );
 
+//zonesCollection = zonesCollection.set({'zone':zone_id})
+
 // Print the zones to the console
 print(zonesCollection);
 
 //var to_draw = ee.FeatureCollection(ee.Feature(zones.get(1)));
 
 
-
-var lista_capas = ['B2','B3','B4','B5','B6','B7','B8'];
-
 // Importar imagen Sentinel 2
-var imagen_Sentinel = ee.ImageCollection('COPERNICUS/S2')
+var imagen_Sentinel = ee.ImageCollection('COPERNICUS/S2_HARMONIZED')
     .filterBounds(center)
     .filterDate('2020-03-01', '2020-05-31')
     .first();
@@ -128,10 +142,37 @@ Map.addLayer(imagen_Sentinel, {
     bands: ['B8', 'B4', 'B3'],
     min: 0,
     max: 2000
-  }, 'Sentinel 2 2020 Falso color');
+  }, 'Sentinel 2 2020 Falso color', false, 0.5);
 
 
 // Add the zones to the map
 //Map.centerObject(center, 16);
 Map.addLayer(zonesCollection, {color: 'yellow'}, 'Zones');
+
+var fvLayer = ui.Map.FeatureViewLayer(
+  'GOOGLE/Research/open-buildings/v3/polygons_FeatureView');
+
+var visParams = {
+  rules: [
+    {
+      filter: ee.Filter.expression('confidence >= 0.65 && confidence < 0.7'),
+      color: 'FF0000'
+    },
+    {
+      filter: ee.Filter.expression('confidence >= 0.7 && confidence < 0.75'),
+      color: 'FFFF00'
+    },
+    {
+      filter: ee.Filter.expression('confidence >= 0.75'),
+      color: '00FF00'
+    },
+  ]
+};
+
+fvLayer.setVisParams(visParams);
+fvLayer.setShown(false);
+fvLayer.setName('Buildings');
+
+Map.add(fvLayer);
+Map.setOptions('SATELLITE');
 
