@@ -1,0 +1,18 @@
+flowchart TD
+    L2015(Landsat 8 Level 2 2015) --> M1(Modelo L8)
+    D(World Settlement Footprint 2015) -->|ANN entrenamiento| M1{Modelo L8}
+    L2020(Landsat 8 Level 2 2020) --> F2020
+    M1 ==> F2020[P]
+    M1 ==> F2014[P]
+    L2014(Landsat 8 Level 2 2014) --> F2014
+    F2020 ==> |prediccion| P2020(Huellas urbanas 2020)
+    F2014 ==> |prediccion| P2014(Huellas urbanas 2014)
+    P2014 ==> |transferencia| T(3 años)
+    T ==> |ANN entrenamiento| M2{Modelo L5}
+    L2011(Landsat 5 Level 2 2011) --> M2  
+    L2010(Landsat 5 Level 2 2010) --> F2010
+    M2 ==> F2010[P]
+    M2 ==> F2000[P]
+    L2000(Landsat 5 Level 2 2000) --> F2000
+    F2000 ==> |prediccion| P2000(Huellas urbanas 2000)
+    F2010 ==> |prediccion| P2010(Huellas urbanas 2010)  
