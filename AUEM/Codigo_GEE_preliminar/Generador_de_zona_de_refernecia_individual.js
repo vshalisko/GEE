@@ -1,3 +1,5 @@
+////// Ejempolo de rectangulo individual con subzonas (PV)
+
 // Centro de zona de referencia (en coordenadas geográficas)
 var center = ee.Geometry.Point([-105.3, 20.7]);
 
@@ -75,8 +77,6 @@ print('Índice de subzonas', combinations);
 //   zones = zones.add(zoneCenter);
 // } 
 //}
-
-////// Ejempolo de rectangulo individual con subzonas (PV)
 
 // Generar centros de subzonas (puntos) de subzona particular
 var zone_centers = combinations.map(
