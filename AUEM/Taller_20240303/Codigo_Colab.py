@@ -35,7 +35,7 @@ vizParams_L8 = {
    'min': 5000,
    'max': 15000
 }
-Map.addLayer(L8_image_2020, vizParams_L8, 'Composición de falso color 2020', True, 1)
+Map.addLayer(L8_image_2020, vizParams_L8, 'Landsat 8 2020', True, 1)
 Map.addLayer(center, {}, 'Punto de interés', True, 1)
 
 ## Presentar mapa
