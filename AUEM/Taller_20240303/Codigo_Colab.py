@@ -6,7 +6,7 @@ import geemap
 ee.Authenticate()
 
 # Inicialización de proyecto GEE - Initialize the library.
-ee.Initialize(project='ee-')          ## !!!!! ATENCIÓN: aquí en comillas deben poner el nombre de su proyecto en Google Earth Engine  !!!!!
+ee.Initialize(project='ee-')          ## !!!!! ATENCIÓN: aquí en comillas deben poner el nombre de su proyecto en Google Earth Engine (en lugar de ee-)  !!!!!
 
 ## Generar un punto
 center = ee.Geometry.Point([-105.3, 20.7])
