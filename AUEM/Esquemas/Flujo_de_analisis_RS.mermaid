@@ -16,9 +16,9 @@ flowchart TD
     L2000(Landsat 5 Level 2 2000) --> F2000
     F2000 ==> |prediccion| P2000[[Huellas urbanas 2000]]
     F2010 ==> |prediccion| P2010[[Huellas urbanas 2010]]
-    C2020([Referencia 2020]) --> E2020(Exactitud 2020)
     P2020 --> |control| E2020
-    C2010([Referencia 2010]) --> E2010(Exactitud 2010)
+    C2020([Referencia 2020]) --> E2020(Exactitud 2020)
     P2010 --> |control| E2010
-    C2000([Referencia 2000]) --> E2000(Exactitud 2000)
+    C2010([Referencia 2010]) --> E2010(Exactitud 2010)
     P2000 --> |control| E2000
+    C2000([Referencia 2000]) --> E2000(Exactitud 2000)
