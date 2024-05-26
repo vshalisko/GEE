@@ -5,11 +5,10 @@
 var slice_start = 11; // inicio de corte de zonas (Enumeración inicia con 1)
 var slice_end = 61; // fin de corte de zonas (Laúltima subzona no se incluye en corte)
 
-// Limites de rectangulo delimitados xll, xur, yll, yur
+// Limites del rectangulo delimitados xll, xur, yll, yur
+// Nota: modificación de los valores aqui resultara en cambio de ubicación 
+// y enumeración de las zonas de referencia generadas
 var limites_utm = [640000, 702800, 2255000, 2310000];
-
-// Tamaño de pixel
-var pixel = 30;
 
 //Proyeción métrica en sistema EPSG
 var proj = ee.Projection('EPSG:32613')
@@ -17,6 +16,11 @@ print(proj);
 
 // Prefijo de zona
 var prefijo = 'GDL';
+
+/////// No modificar codigo por debajo de este línea en caso que no sabes que hacer
+
+// Tamaño de pixel
+var pixel = 30;
 
 // Densidad de muestreo deseable (zonas por 100 km2)
 var sampling_density = 100;
@@ -30,7 +34,8 @@ var mainLength = 200.0; // en m
 var numZonesX = 10;
 var numZonesY = 2;
 
-var semilla = 1234; // semilla de generador de números aleatorios
+// semilla de generador de números aleatorios
+var semilla = 1234; 
 
 // Construir rectangulo delimitador para realizar el muetreo
 var sampleArea = ee.Geometry.Rectangle([limites_utm[0],
