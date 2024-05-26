@@ -1,39 +1,102 @@
+// Para fines de administración de trabajo se propone realizar segmentación 
+// Cada segmento es un corte elegido de un conjunto de total de zonas 
+// De preferencia evitar tener cortes mayores de 50 zonas, ya que por cuestiones de
+// velocidad, la cantidad de subzonas que se visualizan simultaneamente se limito a 1000
+var slice_start = 11; // inicio de corte de zonas (Enumeración inicia con 1)
+var slice_end = 61; // fin de corte de zonas (Laúltima subzona no se incluye en corte)
+
+// Limites de rectangulo delimitados xll, xur, yll, yur
 var limites_utm = [640000, 702800, 2255000, 2310000];
+
+// Tamaño de pixel
 var pixel = 30;
+
+//Proyeción métrica en sistema EPSG
 var proj = ee.Projection('EPSG:32613')
 print(proj);
 
+// Prefijo de zona
 var prefijo = 'GDL';
-var numero_zonas = 30;
 
-// Construir rectangulo delimitador
-var sampleArea = ee.Geometry.Rectangle([limites_utm[0],limites_utm[2],
-                                        limites_utm[1],limites_utm[3]], 
-                            proj, true, false);
-
-// Generar puntos aleatorios en área
-var points_geo = ee.FeatureCollection.randomPoints({
-    region: sampleArea,
-    points: numero_zonas,
-    seed: 1234
-});
-
-// Reproyectar los puntos aleatorios a coordenadas metricas
-var points_metric = points_geo.map(function(point) {
-        return ee.Feature(point).transform(proj);
-});
-
-print(points_metric, 'Puntos metricos');
-Map.addLayer(sampleArea, {}, 'Area de estudio', false);
-Map.addLayer(points_metric, {}, 'Puntos aleatorios', false);
+// Densidad de muestreo deseable (zonas por 100 km2)
+var sampling_density = 100;
+//var numero_zonas = 30;  // solución para pruebas
 
 // Tamaño de rectangulo de referencia
-var mainWidth = 1000.0; // in m
-var mainLength = 200.0; // in m
+var mainWidth = 1000.0; // en m
+var mainLength = 200.0; // en m
 
 // Número de subzonas en rectangulo de referenica
 var numZonesX = 10;
 var numZonesY = 2;
+
+var semilla = 1234; // semilla de generador de números aleatorios
+
+// Construir rectangulo delimitador para realizar el muetreo
+var sampleArea = ee.Geometry.Rectangle([limites_utm[0],
+                                        limites_utm[2],
+                                        limites_utm[1],
+                                        limites_utm[3]], 
+                            proj, true, false);
+
+// Construir rectangulo sin zona del margen, para evitar zonas que salen fuera
+var sampleArea_red = ee.Geometry.Rectangle([limites_utm[0]+0.55*mainWidth,
+                                            limites_utm[2]+0.6*mainLength,
+                                            limites_utm[1]-0.55*mainWidth,
+                                            limites_utm[3]-0.6*mainLength], 
+                            proj, true, false);
+
+
+// Calcular número de zonas
+var numero_zonas_estimado = Math.round((limites_utm[1] - limites_utm[0]) * 
+                     (limites_utm[3] - limites_utm[2]) / 
+                     (sampling_density * 100000))
+print('Número de zonas', numero_zonas_estimado);
+
+// Generar puntos aleatorios en área de estudio
+var points_geo = ee.FeatureCollection.randomPoints({
+    region: sampleArea_red,
+    points: numero_zonas_estimado,
+    seed: semilla
+});
+
+// Reproyectar los puntos aleatorios a coordenadas metricas
+// y agregar propiesdad número de zona
+var points_metric = points_geo.map(function(point) {
+        // obtener indice numerico de elemento en la coleccion y usarlo como numero
+        var index = ee.Number.parse(ee.Feature(point).id());
+        index = index.add(1);
+        // generar id de zona con prefijo
+        var prefix_index = ee.String(prefijo).cat(ee.String(index));
+        var point_con_id = ee.Feature(ee.Feature(point).geometry(), {'zone': prefix_index});
+        return ee.Feature(point_con_id).transform(proj);
+});
+
+print(points_metric, 'Puntos aleatorios metricos');
+Map.addLayer(sampleArea, {}, 'Area de estudio', false);
+Map.addLayer(points_metric, {}, 'Puntos aleatorios', false);
+
+var point_file_name = prefijo.concat('_')
+                      .concat(numero_zonas_estimado)
+                      .concat('_puntos_aleatorioz_zonas');
+print(point_file_name);
+
+// Exportar puntos (FeatureCollection) al archivo KML en Google Drive
+Export.table.toDrive({
+  collection: points_metric,
+  folder: "Colab Data Zones",
+  fileNamePrefix: point_file_name,
+  description: point_file_name,
+  fileFormat: 'KML'
+});
+
+// Realizar selección de un subconjunto de puntos par generar zonas
+var points_metric_list = points_metric.toList(numero_zonas_estimado);
+points_metric_list = points_metric_list.slice(slice_start-1, slice_end-1);
+var points_metric_sliced = ee.FeatureCollection(points_metric_list);
+print('Número de zonas en corte', points_metric_sliced.size());
+
+points_metric = points_metric_sliced;
 
 // Calcular tamaño de cada rectangulo de referencia
 var zoneWidth = mainWidth / numZonesX; // in m
@@ -54,7 +117,7 @@ var combinations = ee.List(
     }, ee.List([]) // the second argument of the iterate is previous state of the list
   )
 );
-print(combinations);
+//print(combinations);
 
 // Funcion para generar rectangulo a partir de centro (regresa geometria)
 function createRectangle(cX, cY, width, length, proj) {
@@ -67,46 +130,52 @@ function createRectangle(cX, cY, width, length, proj) {
   ], proj, true, false);
 }
 
-// conjunto de puntos de esquena izquerda superior
+// conjunto de puntos de esqiena izquerda superior
 var points_topLeft = points_metric.map(function(point) {
-  // obtener indice numerico de elemento en la coleccion y usarlo como numero
-  var index = ee.Number.parse(ee.Feature(point).id());
-  index = index.add(1);
-  // generar id de zona con prefijo
-  var prefix_index = ee.String(prefijo).cat(ee.String(index));
+  var nombre_zona = ee.Feature(point).get('zone');
   var point_centerX = ee.Number(ee.Feature(point).geometry().coordinates().get(0));
   var point_topLeftX = point_centerX.subtract(mainWidth / 2);
   var point_centerY = ee.Number(ee.Feature(point).geometry().coordinates().get(1));
   var point_topLeftY = point_centerY.add(mainLength / 2);
-  return ee.Feature(ee.Geometry.Point([point_topLeftX, point_topLeftY]), {'zone': prefix_index});
+  return ee.Feature(ee.Geometry.Point([point_topLeftX, point_topLeftY]), {'zone': nombre_zona});
 });
-print(points_topLeft, 'Lista de coordenadas topLeft');
+print('Lista de coordenadas topLeft', points_topLeft);
 
 // generador de rectangulos de zonas
-var rectangles_main = points_metric.map(function (point) {
-  // obtener indice numerico de elemento en la coleccion y usarlo como numero
-  var index = ee.Number.parse(ee.Feature(point).id());
-  index = index.add(1);
-  // generar id de zona con prefijo
-  var prefix_index = ee.String(prefijo).cat(ee.String(index));
+var rectangulos_zonas = points_metric.map(function (point) {
+  var nombre_zona = ee.Feature(point).get('zone');
   var point_centerX = ee.Number(ee.Feature(point).geometry().coordinates().get(0));
   var point_centerY = ee.Number(ee.Feature(point).geometry().coordinates().get(1));
   var rectangulo_geometrias = createRectangle(point_centerX, point_centerY, mainWidth, mainLength, proj);
-  return ee.Feature(rectangulo_geometrias, {'zone': prefix_index})
+  return ee.Feature(rectangulo_geometrias, {'zone': nombre_zona})
 });
 
-var rectanglesCollection = ee.FeatureCollection(
-      rectangles_main
+var rectangulos_zonas = ee.FeatureCollection(
+      rectangulos_zonas
 );
-print(rectanglesCollection, 'Rectangulos de referencia');
-Map.addLayer(rectanglesCollection, {}, 'Rectangulos de referencia', false);
+print('Rectangulos de referencia', rectangulos_zonas);
+Map.addLayer(rectangulos_zonas, {}, 'Rectangulos de referencia (segmento)', false);
 
-var rectanglesCollectionSubzones = points_topLeft.map(
+var rectangulos_zonas_file_name = prefijo.concat('_')
+                      .concat(numero_zonas_estimado)
+                      .concat('_rectangulos_zonas_')
+                      .concat(slice_start).concat('_')
+                      .concat(slice_end-1);
+print(rectangulos_zonas_file_name);
+
+// Exportar seleccion de zonas (FeatureCollection) al archivo KML en Google Drive
+Export.table.toDrive({
+  collection: rectangulos_zonas,
+  folder: "Colab Data Zones",
+  fileNamePrefix: rectangulos_zonas_file_name,
+  description: rectangulos_zonas_file_name,
+  fileFormat: 'KML'
+});
+
+// Generar subzonas
+var rectangulos_subzonas = points_topLeft.map(
     function(point) {
-      var index = ee.Number.parse(ee.Feature(point).id());
-      index = index.add(1);
-      // generar id de zona con prefijo
-      var prefix_index = ee.String(prefijo).cat(ee.String(index))
+      var nombre_zona = ee.Feature(point).get('zone');
       var topLeftX = ee.Number(ee.Feature(point).geometry().coordinates().get(0));
       var topLeftY = ee.Number(ee.Feature(point).geometry().coordinates().get(1));
       var zone_centers = combinations.map(
@@ -130,92 +199,50 @@ var rectanglesCollectionSubzones = points_topLeft.map(
         function(subzone) {
             var subindex = zone_center_rectangles.indexOf(subzone);
             subindex = subindex.add(1);
-            return ee.Feature(ee.Geometry(subzone), {'zone': prefix_index, 'subzone': subindex})
+            return ee.Feature(ee.Geometry(subzone), {'zone': nombre_zona, 'subzone': subindex})
       });
       return ee.FeatureCollection(zone_centers_feature.flatten());
 });
-print(rectanglesCollectionSubzones.flatten().limit(500));
-Map.addLayer(rectanglesCollectionSubzones.flatten().limit(500), {color: 'white'}, 'Subzonas', false);
 
+rectangulos_subzonas = rectangulos_subzonas.flatten();
 
+print(rectangulos_subzonas.limit(1000));
+Map.addLayer(rectangulos_subzonas.limit(1000), {color: 'white'}, 'Subzonas', false);
 
-////// Ejempolo de rectangulo individual con subzonas (PV)
+// Exportar seleccion de subzonas (FeatureCollection) al archivo KML en Google Drive
+var rectangulos_subzonas_file_name = prefijo.concat('_')
+                      .concat(numero_zonas_estimado)
+                      .concat('_rectangulos_subzonas_')
+                      .concat(slice_start).concat('_')
+                      .concat(slice_end-1);
+print(rectangulos_subzonas_file_name);
 
-// Centro de zona de referencia
-var center = ee.Geometry.Point([-105.3, 20.7]);
-var zone_id = 1;
-
-// Convertir a proyeccion metrica
-var center_metric = center.transform(proj);
-// Create the main rectangle's center coordinates (top-left corner)
-var centerX = ee.Number(center_metric.coordinates().get(0));
-var topLeftX = centerX.subtract(mainWidth / 2);
-print(topLeftX);
-var centerY = ee.Number(center_metric.coordinates().get(1));
-var topLeftY = centerY.add(mainLength / 2);
-print(topLeftY)
-
-// Rectangulo principal
-var mainRectangle = createRectangle(centerX, centerY, mainWidth, mainLength, proj);
-
-// Generar centros de subzonas (puntos) de subzona particular
-var zone_centers = combinations.map(
-  function(i) {
-    var xOffset = ee.Number(ee.List(i).get(0)).multiply(zoneWidth);
-    var yOffset = ee.Number(ee.List(i).get(1)).multiply(zoneLength);
-    var zoneCenter = ee.Geometry.Point([
-      topLeftX.add(xOffset).add(zoneWidth / 2),
-      topLeftY.subtract(yOffset).subtract(zoneLength / 2)
-    ]);
-    return zoneCenter;
-  }
-);
-print(zone_centers);
-
-// Convertir puntos de centros de subzonas a rectangulos
-var zones = zone_centers.map(function(zone) {
-  var zoneRectangle = createRectangle(
-              ee.Geometry(zone).coordinates().get(0), 
-              ee.Geometry(zone).coordinates().get(1), 
-              zoneWidth, zoneLength, proj);
-  return zoneRectangle;
+// Exportar seleccion de subzonas (FeatureCollection) al archivo KML en Google Drive
+Export.table.toDrive({
+  collection: rectangulos_subzonas,
+  folder: "Colab Data Zones",
+  fileNamePrefix: rectangulos_subzonas_file_name,
+  description: rectangulos_subzonas_file_name,
+  fileFormat: 'KML'
 });
-
-print(zones);
-
-// convertir a Features
-var zones_features = zones.map(function(zone) {
-  var index = zones.indexOf(zone);
-  index = index.add(1);
-  return ee.Feature(ee.Geometry(zone), {'zone':zone_id, 'subzone': index})
-});
-print(zones_features);
-print(zones_features.get(1));
-
-var zonesCollection = ee.FeatureCollection(
-      zones_features
-);
-print(zonesCollection);
 
 
 ////// Datos de referencia
 
 // Importar imagen Sentinel 2
 var imagen_Sentinel = ee.ImageCollection('COPERNICUS/S2_HARMONIZED')
-    .filterBounds(center)
+    .filterBounds(sampleArea)
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 5))
     .filterDate('2020-03-01', '2020-05-31')
     .first();
 
 // Visualuizar con composición de Falso color
-Map.centerObject(center, 12);
+Map.centerObject(sampleArea, 12);
 Map.addLayer(imagen_Sentinel, {
     bands: ['B8', 'B4', 'B3'],
     min: 0,
     max: 2000
   }, 'Sentinel 2 2020 Falso color', false, 0.5);
-
-Map.addLayer(ee.Feature(mainRectangle), {color: 'blue'}, 'Rectangulo PV');
-Map.addLayer(zonesCollection, {color: 'yellow'}, 'Subzonas PV');
 
 var fvLayer = ui.Map.FeatureViewLayer(
   'GOOGLE/Research/open-buildings/v3/polygons_FeatureView');
@@ -243,6 +270,3 @@ fvLayer.setName('Buildings');
 
 Map.add(fvLayer);
 Map.setOptions('SATELLITE');
-
-
-
