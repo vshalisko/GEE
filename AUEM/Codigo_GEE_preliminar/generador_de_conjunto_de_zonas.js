@@ -1,9 +1,10 @@
 // Para fines de administración de trabajo se propone realizar segmentación 
 // Cada segmento es un corte elegido de un conjunto de total de zonas 
+// Sugerencias de cortes: 1-51, 51-101, 101-151, 151-201, 
 // De preferencia evitar tener cortes mayores de 50 zonas, ya que por cuestiones de
-// velocidad, la cantidad de subzonas que se visualizan simultaneamente se limito a 1000
-var slice_start = 50; // inicio de corte de zonas (Enumeración inicia con 1)
-var slice_end = 81; // fin de corte de zonas (Laúltima subzona no se incluye en corte)
+// velocidad, la cantidad de subzonas que se visualizan simultaneamente se limita a 1000
+var slice_start = 51; // inicio de corte de zonas (enumeración inicia con 1)
+var slice_end = 80; // fin de corte de zonas (última subzona incluida en corte)
 
 // Limites del rectangulo delimitados xll, xur, yll, yur
 // Nota: modificación de los valores aqui resultara en cambio de ubicación 
@@ -12,7 +13,7 @@ var limites_utm = [640000, 702800, 2255000, 2310000];
 
 //Proyeción métrica en sistema EPSG
 var proj = ee.Projection('EPSG:32613')
-print(proj);
+//print(proj);
 
 // Prefijo de zona
 var prefijo = 'GDL';
@@ -56,7 +57,7 @@ var sampleArea_red = ee.Geometry.Rectangle([limites_utm[0]+0.55*mainWidth,
 var numero_zonas_estimado = Math.round((limites_utm[1] - limites_utm[0]) * 
                      (limites_utm[3] - limites_utm[2]) / 
                      (sampling_density * 100000))
-print('Número de zonas', numero_zonas_estimado);
+print('Número total de zonas en área de estudio', numero_zonas_estimado);
 
 // Generar puntos aleatorios en área de estudio
 var points_geo = ee.FeatureCollection.randomPoints({
@@ -77,7 +78,6 @@ var points_metric = points_geo.map(function(point) {
         return ee.Feature(point_con_id).transform(proj);
 });
 
-print(points_metric, 'Puntos aleatorios metricos');
 Map.centerObject(sampleArea, 12);
 Map.addLayer(sampleArea, {}, 'Area de estudio', false);
 Map.addLayer(points_metric, {}, 'Puntos aleatorios', false);
@@ -85,7 +85,7 @@ Map.addLayer(points_metric, {}, 'Puntos aleatorios', false);
 var point_file_name = prefijo.concat('_')
                       .concat(numero_zonas_estimado)
                       .concat('_puntos_aleatorioz_zonas');
-print(point_file_name);
+//print(point_file_name);
 
 // Exportar puntos (FeatureCollection) al archivo KML en Google Drive
 Export.table.toDrive({
@@ -98,11 +98,14 @@ Export.table.toDrive({
 
 // Realizar selección de un subconjunto de puntos par generar zonas
 var points_metric_list = points_metric.toList(numero_zonas_estimado);
-points_metric_list = points_metric_list.slice(slice_start-1, slice_end-1);
+points_metric_list = points_metric_list.slice(slice_start-1, slice_end);
 var points_metric_sliced = ee.FeatureCollection(points_metric_list);
+print('Corte de zonas de '.concat(slice_start).concat(' a ').concat(slice_end));
 print('Número de zonas en corte', points_metric_sliced.size());
 
+print('Puntos aleatorios completos', points_metric);
 points_metric = points_metric_sliced;
+print('Puntos aleatorios en corte', points_metric);
 
 // Calcular tamaño de cada rectangulo de referencia
 var zoneWidth = mainWidth / numZonesX; // in m
@@ -145,7 +148,7 @@ var points_topLeft = points_metric.map(function(point) {
   var point_topLeftY = point_centerY.add(mainLength / 2);
   return ee.Feature(ee.Geometry.Point([point_topLeftX, point_topLeftY]), {'zone': nombre_zona});
 });
-print('Lista de coordenadas topLeft', points_topLeft);
+print('Lista de coordenadas topLeft en corte', points_topLeft);
 
 // generador de rectangulos de zonas
 var rectangulos_zonas = points_metric.map(function (point) {
@@ -159,17 +162,17 @@ var rectangulos_zonas = points_metric.map(function (point) {
 var rectangulos_zonas = ee.FeatureCollection(
       rectangulos_zonas
 );
-print('Rectangulos de referencia', rectangulos_zonas);
+print('Rectangulos de referencia en corte', rectangulos_zonas);
 Map.addLayer(rectangulos_zonas, {}, 'Rectangulos de referencia (segmento)', false);
 
+// Exportar corte de zonas (FeatureCollection) al archivo KML en Google Drive
 var rectangulos_zonas_file_name = prefijo.concat('_')
                       .concat(numero_zonas_estimado)
                       .concat('_rectangulos_zonas_')
                       .concat(slice_start).concat('_')
                       .concat(slice_end-1);
-print(rectangulos_zonas_file_name);
+//print(rectangulos_zonas_file_name);
 
-// Exportar seleccion de zonas (FeatureCollection) al archivo KML en Google Drive
 Export.table.toDrive({
   collection: rectangulos_zonas,
   folder: "Colab Data Zones",
@@ -178,7 +181,7 @@ Export.table.toDrive({
   fileFormat: 'KML'
 });
 
-// Generar subzonas
+// Generar corte de subzonas
 var rectangulos_subzonas = points_topLeft.map(
     function(point) {
       var nombre_zona = ee.Feature(point).get('zone');
@@ -215,15 +218,14 @@ rectangulos_subzonas = rectangulos_subzonas.flatten();
 print(rectangulos_subzonas.limit(1000));
 Map.addLayer(rectangulos_subzonas.limit(1000), {color: 'white'}, 'Subzonas', true);
 
-// Exportar seleccion de subzonas (FeatureCollection) al archivo KML en Google Drive
+// Exportar corte de subzonas (FeatureCollection) al archivo KML en Google Drive
 var rectangulos_subzonas_file_name = prefijo.concat('_')
                       .concat(numero_zonas_estimado)
                       .concat('_rectangulos_subzonas_')
                       .concat(slice_start).concat('_')
                       .concat(slice_end-1);
-print(rectangulos_subzonas_file_name);
+//print(rectangulos_subzonas_file_name);
 
-// Exportar seleccion de subzonas (FeatureCollection) al archivo KML en Google Drive
 Export.table.toDrive({
   collection: rectangulos_subzonas,
   folder: "Colab Data Zones",
