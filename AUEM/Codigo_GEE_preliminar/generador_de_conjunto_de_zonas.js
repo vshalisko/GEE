@@ -216,7 +216,6 @@ var rectangulos_subzonas = points_topLeft.map(
 rectangulos_subzonas = rectangulos_subzonas.flatten();
 
 print(rectangulos_subzonas.limit(1000));
-Map.addLayer(rectangulos_subzonas.limit(1000), {color: 'white'}, 'Subzonas', true);
 
 // Exportar corte de subzonas (FeatureCollection) al archivo KML en Google Drive
 var rectangulos_subzonas_file_name = prefijo.concat('_')
@@ -266,18 +265,53 @@ Map.onClick(getProps);
 ////// Datos de referencia
 
 // Importar imagen Sentinel 2
-var imagen_Sentinel = ee.ImageCollection('COPERNICUS/S2_HARMONIZED')
+var imagen_Sentinel_2020 = ee.ImageCollection('COPERNICUS/S2_HARMONIZED')
     .filterBounds(sampleArea)
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 5))
     .filterDate('2020-03-01', '2020-05-31')
-    .first();
+    //.first();
+    
+var imagen_Sentinel_2020_composite = imagen_Sentinel_2020.median();
 
 // Visualuizar con composición de Falso color
-Map.addLayer(imagen_Sentinel, {
+Map.addLayer(imagen_Sentinel_2020_composite, {
     bands: ['B8', 'B4', 'B3'],
     min: 0,
     max: 2000
-  }, 'Sentinel 2 2020 Falso color', false, 0.5);
+  }, 'Sentinel 2 2020 Falso color', false, 1);
+  
+  
+// Importar imagen Landsat 5 2010
+var imagen_L5_2010 = ee.ImageCollection('LANDSAT/LT05/C02/T1_L2')
+    .filterBounds(sampleArea)
+    .filter(ee.Filter.lt('CLOUD_COVER', 5))
+    .filterDate('2010-01-01', '2010-05-31')
+    //.first();
+    
+var imagen_L5_2010_composite = imagen_L5_2010.median();
+
+// Visualuizar con composición de Falso color
+Map.addLayer(imagen_L5_2010_composite, {
+    bands: ['SR_B4', 'SR_B3', 'SR_B2'],
+    min: 5000,
+    max: 18000
+  }, 'Landsat 5 2010 Falso color', false, 1);
+
+// Importar imagen Landsat 5 2010
+var imagen_L5_2000 = ee.ImageCollection('LANDSAT/LT05/C02/T1_L2')
+    .filterBounds(sampleArea)
+    .filter(ee.Filter.lt('CLOUD_COVER', 5))
+    .filterDate('2000-01-01', '2000-05-31')
+    //.first();
+    
+var imagen_L5_2000_composite = imagen_L5_2000.median();
+
+// Visualuizar con composición de Falso color
+Map.addLayer(imagen_L5_2000_composite, {
+    bands: ['SR_B4', 'SR_B3', 'SR_B2'],
+    min: 5000,
+    max: 18000
+  }, 'Landsat 5 2000 Falso color', false, 1);
 
 var fvLayer = ui.Map.FeatureViewLayer(
   'GOOGLE/Research/open-buildings/v3/polygons_FeatureView');
@@ -305,3 +339,5 @@ fvLayer.setName('Buildings');
 
 Map.add(fvLayer);
 Map.setOptions('SATELLITE');
+
+Map.addLayer(rectangulos_subzonas.limit(1000), {color: 'yellow'}, 'Subzonas', true, 0.8);
