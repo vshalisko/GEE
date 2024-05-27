@@ -1,6 +1,6 @@
 // Para fines de administración de trabajo se propone realizar segmentación 
 // Cada segmento es un corte elegido de un conjunto de total de zonas 
-// Sugerencias de cortes: 1-51, 51-101, 101-151, 151-201, 
+// Sugerencias de cortes: 1-50, 51-100, 101-150, 151-200, 201-250...
 // De preferencia evitar tener cortes mayores de 50 zonas, ya que por cuestiones de
 // velocidad, la cantidad de subzonas que se visualizan simultaneamente se limita a 1000
 var slice_start = 51; // inicio de corte de zonas (enumeración inicia con 1)
@@ -341,3 +341,4 @@ Map.add(fvLayer);
 Map.setOptions('SATELLITE');
 
 Map.addLayer(rectangulos_subzonas.limit(1000), {color: 'yellow'}, 'Subzonas', true, 0.8);
+
