@@ -3,32 +3,33 @@
 // Sugerencias de cortes: 1-20, 21-40, 41-60...
 // De preferencia evitar cortes mayores de 50 zonas, ya que por cuestiones de
 // velocidad, la cantidad de subzonas que se visualizan simultaneamente se limita a 1000
-var slice_start = 41; // inicio de corte segmento (enumeración inicia con 1)
-var slice_end = 63; // fin de corte de segmento (última subzona incluida en corte)
+var slice_start = 1; // inicio de corte segmento (enumeración inicia con 1)
+var slice_end = 20; // fin de corte de segmento (última subzona incluida en corte)
 
-// Limites del rectangulo delimitados xll, xur, yll, yur
+// Limites del rectangulo delimitados xll, xur, yll, yur en coordenadas métricas
 // Nota: modificación de los valores aqui resultara en cambio de ubicación 
 // y enumeración de las zonas de referencia generadas
-var limites_utm = [729552, 736104, 2245711, 2255305];
+var limites_utm = [640000, 702800, 2255000, 2310000];
 
-var centro = ee.Geometry.Point([-102.7708, 20.3500]);
-var radius = 2700;
+// coordenadas geográficas del centro de circulo de mayor densidad de puntos
+var centro = ee.Geometry.Point([-103.358463, 20.675366]);
+// radio del circulo en m
+var radius = 20000;
 
 //Proyeción métrica en sistema EPSG
 var proj = ee.Projection('EPSG:32613')
 //print(proj);
 
 // Prefijo de área de estudio
-var prefijo = 'OCT';
+var prefijo = 'GDL';
+
+// Densidad de muestreo deseable (zonas por km2)
+var sampling_density = 0.01;
 
 /////// No modificar codigo por debajo de este línea en caso que no sabes que hacer
 
 // Tamaño de pixel
-var pixel = 30;
-
-// Densidad de muestreo deseable (zonas por km2)
-var sampling_density = 0.1;
-//var numero_zonas = 30;  // solución para pruebas
+//var pixel = 30;
 
 // Tamaño de rectangulo de referencia
 var mainWidth = 1000.0; // en m
@@ -41,8 +42,8 @@ var numZonesY = 2;
 // semilla de generador de números aleatorios
 var semilla = 1234; 
 
-// factor de redundancia en generación de números antes de filtrado
-var redundancy = 10;
+// factor de redundancia en generación de puntos antes de filtrado
+var redundancy = 2;
 
 // Construir rectangulo delimitador para realizar el muetreo
 var sampleArea = ee.Geometry.Rectangle([limites_utm[0],
@@ -82,14 +83,19 @@ function createRectangle(cX, cY, width, length, proj) {
 }
 
 // Generar puntos aleatorios en área de estudio
+// Nota: una parte de puntos se va a descartar, se requiere tener 
+// mas puntos para quedar al final con cantidad requerida, el exceso de puntos 
+// queda definido en la variable redundancy
+// Opcion 1) Puntos con distribucion uniforme en el rectangulo de área de estudio
+//var numero_zonas_con_redundancia = redundancy * numero_zonas_estimado;
 //var points_geo = ee.FeatureCollection.randomPoints({
 //    region: sampleArea_red,
-//    points: numero_zonas_estimado,
+//    points: numero_zonas_con_redundancia,
 //    seed: semilla
 //});
 
-// Generar puntos aleatorios con mayor concentracion en circulo
-// se requiere tener mas puntos de lo que se requiere para posteriormente filtrar
+// Opcion 2) Generar puntos aleatorios con mayor concentracion 
+// en circulo central (65% de puntos) y menor en el rectangulo completo (35%)
 var numero_zonas_circulo = Math.round(redundancy * 0.65 * numero_zonas_estimado);
 var numero_zonas_fuera = redundancy * numero_zonas_estimado - numero_zonas_circulo;
 var points_geo_circle = ee.FeatureCollection.randomPoints({
@@ -106,19 +112,28 @@ var points_geo = points_geo_circle.merge(points_geo_general);
 points_geo = points_geo.randomColumn('random', semilla);
 points_geo = points_geo.sort('random');
 
-// filtrar puntos muy cercanos (umbral distance)
+// filtrar y descartar puntos muy cercanos
+// existed dos posibles estrategias de filtrado:
+// 1) con zona buffer circular definida en variable distance
+// 2) con zonas rectangulares desde el centro de rectangulo 
+// definidas por ancho, alto y amortiguamiento adicional
 var filterDistance = function(points) {
-  // var distance = 700;   // se usa con buffer circular
+  // var distance = 700;   // m, se usa con buffer circular
+  var ahcho_buffer = 0.018;
+  var alto_buffer = 0.006;
+  var margen_buffer = 0.001;
   var filt2 = ee.List([]);
   var filt = points.iterate(function(el, inic){
                          var ini = ee.List(inic);
                          var fcini = ee.FeatureCollection(ini);
+                         // alternativa 1) buffer circular
+                         // var buf = ee.Feature(el).geometry().buffer(distance);
+                         // alternativa 2) buffer rectangular
+                         // distancias para caso de rectangulo van en coordenadas geograficas
                          var point_centerX = ee.Number(ee.Feature(el).geometry().coordinates().get(0));
                          var point_centerY = ee.Number(ee.Feature(el).geometry().coordinates().get(1));
-                         // distancias en coordenadas geograficas
-                         var buf = ee.Geometry(createRectangle(point_centerX, point_centerY, 0.018, 0.006)).buffer(0.001);
-                         // alternativa: buffer circular
-                         //var buf = ee.Feature(el).geometry().buffer(distance);
+                         var buf = ee.Geometry(createRectangle(point_centerX, point_centerY, ahcho_buffer, alto_buffer))
+                                    .buffer(margen_buffer);
                          var s = fcini.filterBounds(buf).size();
                          var cond = s.lte(0);
                          return ee.Algorithms.If(cond, ini.add(el), ini);
@@ -158,12 +173,12 @@ Map.addLayer(sampleArea, {}, 'Area de estudio', false);
 Map.addLayer(sampleCircle, {}, 'Circulo de estudio', false);
 Map.addLayer(points_metric, {}, 'Puntos aleatorios', false);
 
+// Exportar puntos (FeatureCollection) al archivo KML en Google Drive
 var point_file_name = prefijo.concat('_')
                       .concat(numero_zonas_estimado)
                       .concat('_puntos_aleatorioz_zonas');
 //print(point_file_name);
 
-// Exportar puntos (FeatureCollection) al archivo KML en Google Drive
 Export.table.toDrive({
   collection: points_metric,
   folder: "Colab Data Zones",
@@ -172,7 +187,7 @@ Export.table.toDrive({
   fileFormat: 'KML'
 });
 
-// Realizar selección de un subconjunto de puntos par generar zonas
+// Realizar selección de un subconjunto de puntos par generar subzonas
 var points_metric_list = points_metric.toList(numero_zonas_estimado);
 points_metric_list = points_metric_list.slice(slice_start-1, slice_end);
 var points_metric_sliced = ee.FeatureCollection(points_metric_list);
@@ -203,7 +218,7 @@ var combinations = ee.List(
 );
 //print(combinations);
 
-// generador de rectangulos de zonas
+// generador de rectangulos de las zonas
 var rectangulos_zonas = points_metric.map(function (point) {
   var nombre_zona = ee.Feature(point).get('zone');
   var point_centerX = ee.Number(ee.Feature(point).geometry().coordinates().get(0));
@@ -232,9 +247,10 @@ Export.table.toDrive({
   fileFormat: 'KML'
 });
 
+// asignar el corte de subzonas
 points_metric = points_metric_sliced;
 
-// conjunto de puntos de esqiena izquerda superior
+// conjunto de puntos de esqiena izquerda superior (aplicando el corte de zonas)
 var points_topLeft = points_metric.map(function(point) {
   var nombre_zona = ee.Feature(point).get('zone');
   var point_centerX = ee.Number(ee.Feature(point).geometry().coordinates().get(0));
@@ -245,7 +261,7 @@ var points_topLeft = points_metric.map(function(point) {
 });
 print('Lista de coordenadas topLeft en corte', points_topLeft);
 
-// Generar corte de subzonas
+// Generar subzonas
 var rectangulos_subzonas = points_topLeft.map(
     function(point) {
       var nombre_zona = ee.Feature(point).get('zone');
@@ -279,7 +295,8 @@ var rectangulos_subzonas = points_topLeft.map(
 
 rectangulos_subzonas = rectangulos_subzonas.flatten();
 
-print(rectangulos_subzonas.limit(1000));
+// se imprimen máximo 100 elementos, para accelerar el proceso
+print(rectangulos_subzonas.limit(100));
 
 // Exportar corte de subzonas (FeatureCollection) al archivo KML en Google Drive
 var rectangulos_subzonas_file_name = prefijo.concat('_')
@@ -318,7 +335,7 @@ function getProps(loc) {
 }
 
 var panel = ui.Panel({style: {position: 'bottom-left', width: '300px', height: '90px'}});
-var info = ui.Label({value: 'Click en subzona para conocer sus datos', style: {whiteSpace: 'pre'}});
+var info = ui.Label({value: 'Click en subzona para conocer sus datos\n(respuesta puede tardar)', style: {whiteSpace: 'pre'}});
 panel.add(info);
 
 Map.add(panel);
