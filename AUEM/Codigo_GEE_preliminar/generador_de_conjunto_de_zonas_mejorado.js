@@ -288,7 +288,10 @@ var rectangulos_subzonas = points_topLeft.map(
         function(subzone) {
             var subindex = zone_center_rectangles.indexOf(subzone);
             subindex = subindex.add(1);
-            return ee.Feature(ee.Geometry(subzone), {'subzone': subindex, 'zone': nombre_zona})
+            var nombre_kml = ee.String(nombre_zona).cat(ee.String('_')).cat(ee.String(subindex));
+            return ee.Feature(ee.Geometry(subzone), {'Name': nombre_kml,
+                                                     'subzone': subindex, 
+                                                     'zone': nombre_zona});
       });
       return ee.FeatureCollection(zone_centers_feature.flatten());
 });
