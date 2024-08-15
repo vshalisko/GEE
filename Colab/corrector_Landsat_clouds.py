@@ -4,7 +4,6 @@ import ee
 import geemap
 import numpy as np
 
-
 # Trigger the authentication flow.
 ee.Authenticate()
 
@@ -19,6 +18,7 @@ def maskCloudsL8(image):
     cloud_mask = qa.bitwiseAnd(cloud_shadow_bit_mask).eq(0).And(qa.bitwiseAnd(cloud_bit_mask).eq(0))
     return image.updateMask(cloud_mask)
 
+punto_interes = ee.Geometry.Point([-89.6237, 20.9674]) # punto ciudad
 
 L8_collection_2015 = (ee.ImageCollection("LANDSAT/LC08/C02/T1_L2")
                       .filterBounds(punto_interes)
@@ -55,3 +55,4 @@ vizParams_L8_mean = {
 }
 
 Map.addLayer(L8_image_2015_re, vizParams_L8_mean, '2015 falso color', True, 1)
+Map
