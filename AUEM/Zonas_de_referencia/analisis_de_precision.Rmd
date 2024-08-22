@@ -1,0 +1,257 @@
+---
+title: "Analisis de precisión"
+author: "Viacheslav Shalsiko"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(sf)
+library(raster)
+library(sp)
+library(xml2)
+```
+
+```{r}
+readKML <- function(file,keep_name_description=FALSE,layer,...) {
+  # Set keep_name_description = TRUE to keep "Name" and "Description" columns
+  #   in the resulting SpatialPolygonsDataFrame. Only works when there is
+  #   ExtendedData in the kml file.
+
+  ##sp_obj<-readOGR(file,layer,...)
+  sp_obj<-st_read(file)
+  xml1<-read_xml(file)
+  if (!missing(layer)) {
+    different_layers <- xml_find_all(xml1, ".//d1:Folder") 
+    layer_names <- different_layers %>% 
+      xml_find_first(".//d1:name") %>% 
+      xml_contents() %>% 
+      xml_text()
+
+    selected_layer <- layer_names==layer
+    if (!any(selected_layer)) stop("Layer does not exist.")
+    xml2 <- different_layers[selected_layer]
+  } else {
+    xml2 <- xml1
+  }
+
+  # extract name and type of variables
+
+  variable_names1 <- 
+    xml_find_first(xml2, ".//d1:ExtendedData") %>% 
+    xml_children() 
+
+  while(variable_names1 %>% 
+        xml_attr("name") %>% 
+        is.na() %>% 
+        any()&variable_names1 %>%
+        xml_children() %>% 
+        length>0) variable_names1 <- variable_names1 %>%
+    xml_children()
+
+  variable_names <- variable_names1 %>%
+    xml_attr("name") %>% 
+    unique()
+  
+  ## Imprimir lista de variables
+  print(paste("Variable: ",variable_names))
+
+  # return sp_obj if no ExtendedData is present
+  if (is.null(variable_names)) return(sp_obj)
+
+  data1 <- xml_find_all(xml2, ".//d1:ExtendedData") %>% 
+    xml_children()
+
+  while(data1 %>%
+        xml_children() %>% 
+        length>0) data1 <- data1 %>%
+    xml_children()
+
+  data <- data1 %>% 
+    xml_text() %>% 
+    matrix(.,ncol=length(variable_names),byrow = TRUE) %>% 
+    as.data.frame()
+
+  colnames(data) <- variable_names
+  
+  ## Verificar extreccion de tabla de datos
+  #print(data)
+
+  if (keep_name_description) {
+    sp_obj@data <- data
+  } else {
+    try(sp_obj <- cbind(sp_obj,data),silent=TRUE)
+  }
+  sp_obj
+}
+```
+
+```{r}
+zonas1 <- readKML("CHP_51_rectangulos_subzonas_1_20.kml")
+zonas2 <- readKML("CHP_51_rectangulos_subzonas_21_40.kml")
+zonas3 <- readKML("CHP_51_rectangulos_subzonas_41_51.kml")
+#str(zonas1)
+
+zonas <- rbind(zonas1, zonas2, zonas3)
+zonas$subzone <- as.integer(zonas$subzone)
+zonas$zona <- as.integer(gsub("^.{0,3}", "", zonas$zone))
+zonas$zona_subzona <- 100 * zonas$zona + zonas$subzone
+str(zonas)
+```
+
+```{r}
+plot(zonas["subzone"])
+```
+
+```{r}
+r2000 <- raster("../raster_test_data/CHP/TIF/CHP_2000_corrected_ok2.tif")
+r2000
+projection(r2000)
+plot(r2000)
+```
+
+```{r}
+r2010 <- raster("../raster_test_data/CHP/TIF/CHP_2010_corrected.tif")
+r2010
+projection(r2010)
+plot(r2010)
+```
+
+```{r}
+r2020 <- raster("../raster_test_data/CHP/TIF/CHP_2020.tif")
+r2020
+projection(r2020)
+plot(r2020)
+```
+
+```{r}
+zonas_utm <- st_transform(zonas, crs = st_crs(r2000))
+zonas_utm
+```
+
+```{r}
+plot(r2000)
+plot(zonas_utm["subzone"], add=TRUE)
+```
+
+```{r}
+Mode <- function(x, na.rm = FALSE) {
+  if(na.rm){
+    x = x[!is.na(x)]
+  }
+
+  ux <- unique(x)
+  return(ux[which.max(tabulate(match(x, ux)))])
+}
+```
+
+```{r r2000, cache=TRUE}
+zonas_utm$r2000 <- raster::extract(r2000, zonas_utm, fun=Mode)
+```
+
+```{r r2010, cache=TRUE}
+zonas_utm$r2010 <- raster::extract(r2010, zonas_utm, fun=Mode)
+```
+
+```{r r2020, cache=TRUE}
+zonas_utm$r2020 <- raster::extract(r2020, zonas_utm, fun=Mode)
+```
+
+```{r}
+zonas_utm$r2000 <- replace(zonas_utm$r2000, zonas_utm$r2000 == 2, 3)
+zonas_utm$r2000 <- replace(zonas_utm$r2000, zonas_utm$r2000 == 0, 2)
+zonas_utm$r2000 <- replace(zonas_utm$r2000, zonas_utm$r2000 == 1, 1)
+plot(zonas_utm["r2000"])
+```
+
+```{r}
+col_names <- c("zona",
+               paste0("A",1:20),
+               paste0("B",1:20),
+               paste0("C",1:20))
+control <- read.csv("CHP_referencia.csv", 
+                    skip=2, col.names = col_names)
+head(control)
+
+control_2000 <- control[,c(1,42:61)]
+control_2010 <- control[,c(1,22:41)]
+control_2020 <- control[,c(1,2:21)]
+head(control_2000)
+head(control_2010)
+head(control_2020)
+```
+
+```{r}
+library(tidyr)
+
+control_2000_long <- control_2000 %>% 
+  pivot_longer(
+    cols = paste0("C",1:20), 
+    names_to = "subzona",
+    values_to = "c2000"
+)
+
+control_2000_long <- as.data.frame(control_2000_long)
+control_2000_long$zona <- as.integer(gsub("^.{0,3}", "", control_2000_long$zona))
+control_2000_long$subzona <- as.integer(gsub("^.{0,1}", "", control_2000_long$subzona))
+control_2000_long$zona_subzona <- 100 * control_2000_long$zona + control_2000_long$subzona
+
+head(control_2000_long)
+```
+
+```{r}
+zonas_utm <- merge(zonas_utm, control_2000_long[,c("c2000","zona_subzona")],
+                   by = "zona_subzona")
+head(zonas_utm)
+```
+
+```{r}
+plot(zonas_utm["c2000"])
+```
+
+```{r}
+error_stat <- function(m, legend) {
+  n <- sum(m)
+  cat("Número de elementos: ",n,"\n")
+  d <- diag(m)
+  rowsums <- apply(m, 1, sum)
+  colsums <- apply(m, 2, sum)
+  p <- rowsums / n
+  q <- colsums / n
+  cat("\nSumas normalizadas en filas (p) y en columnas (q):","\n")
+  print(data.frame(legend,p,q))
+  # respuesta por clase
+  recall <- d / colsums 
+  # precición por clase
+  precision <- d / rowsums 
+  # Métrica F1 (media harmónica de precición y respuesta)
+  f1 <- 2 * precision * recall / (precision + recall)
+  cat("\nPrecición y respuesta por clase:","\n")
+  print(data.frame(legend,precision, recall, f1))
+  
+  # precición general
+  accuracy <- sum(d) / n
+  cat("\nPrecición general: ",accuracy,"\n")  
+  
+  # métrica de precición kappa
+  expaccuracy = sum(p * q)
+  kappa = (accuracy - expaccuracy) / (1 - expaccuracy)
+  cat("\nKappa de Cohen: ",kappa,"\n")
+  
+}
+
+nombres_clases <- c("No-urbano","Agua","Urbano")
+```
+
+
+# Analisis error 2000
+
+```{r}
+matriz_conf_2000 <- table(zonas_utm$r2000,zonas_utm$c2000)
+matriz_conf_2000
+```
+
+```{r}
+error_stat(matriz_conf_2000, nombres_clases)
+```
+
