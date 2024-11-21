@@ -1,5 +1,7 @@
-flowchart LR
-  A([Definicion de zona de analisis])-->B
-  B[/Definir coordenadas del centro/]-->C
-  C[/Capa categorica de espacio construido, espacio no-construido y agua/]-->Z1
+flowchart TD
+  A1([Definicion de zona de analisis])-->B1
+  B1[/Definir coordenadas del centro/]-->C1
+  J1{{Verificación de prerequisitos para arranque de analisis ANN}}-->K1
+  K1[Analisis con ANN]-->M1
+  M1[/Capa categorica de espacio construido, espacio no-construido y agua/]-->Z1
   Z1([Analisis de zona concluido])
