@@ -3,12 +3,17 @@ flowchart TD
   B1[/Definir coordenadas UTM del centro, coordenadas de extremos LLC y URC, zona UTM CRS/]-->C1
   C1[Definición de rectangulo para descarga de imagenes de satelite: Colab ee]-->C2
   C2[[Segmentación del rectangulo en zonas permitidos para descarga de GEE: Colab ee]]-->D1
-  D1[Selección de imagenes de satelite L5 y L8 para cada fecha de interés 2000, 2010, 2020]-->D2
+  C2-->C3
+  C2-->C4
+  C3[[Descarga de segmentos de capa de urbanización en 2015 y su conversión en numpy array: Colab ee]]-->E2
+  C4[[Descarga de segmentos de capa cuerpos de agua en 2015 y su conversión en numpy array]]-->E2
+  D1[Selección de imagenes de satelite L5 y L8 para cada fecha de interés 2000, 2010, 2015, 2020]-->D2
   D2{{Evaluación de disponibilidad y calidad de la imagen}}
   D2--imagen con calidad suficiente disponible-->E1
   D2--imagen con calidad suficiente no disponible-->D3
   D3[/Cambio de fecha a una cercana/]-->D1
-  E1[[Descarga de segmentos de la imagen y su conversion en numpu array: Colab ee]]-->J1
+  E1[[Descarga de segmentos de la imagen y su conversion en numpu array: Colab ee]]-->E2
+  E2[[union de numpy array de los segmentos en arrays completos: Colab ee]]-->J1
   J1{{Verificación de prerequisitos para arranque de analisis ANN}}-->K1
   K1[Analisis con ANN]-->M1
   M1[/Capa categorica de espacio construido, espacio no-construido y agua/]-->Z1
