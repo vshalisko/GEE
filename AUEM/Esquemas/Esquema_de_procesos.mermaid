@@ -13,8 +13,10 @@ flowchart TD
   D2--imagen con calidad suficiente no disponible-->D3
   D3[/Cambio de fecha a una cercana/]-->D1
   E1[[Descarga de segmentos de la imagen y su conversion en numpu array: Colab ee]]-->E2
-  E2[[union de numpy array de los segmentos en arrays completos: Colab ee]]-->J1
-  J1{{Verificación de prerequisitos para arranque de analisis ANN}}-->K1
-  K1[Analisis con ANN]-->M1
+  E2[[union de numpy array de los segmentos en arrays completos: Colab numpy]]-->E3
+  E3[Separación de subconjuntos de entranamiento, validación y control: Colab scipy]-->J1
+  J1{{Verificación de prerequisitos para arranque de analisis ANN en determinada fecha}}-->K1
+  K1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->K2
+  K2[[Prediccion con ANN: Colab TensorFlow]]-->M1
   M1[/Capa categorica de espacio construido, espacio no-construido y agua/]-->Z1
   Z1([Analisis de zona concluido])
