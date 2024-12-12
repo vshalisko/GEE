@@ -27,7 +27,7 @@ flowchart TD
   E2[[Union de numpy arrays de los segmentos en array completo por fecha: Colab numpy]]-->E3
   E3[[Exportación a Google Drive]]-->E3A
 
-  E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2: Google Drive)]-->F1
+  E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2 en 2000, 2010, 2015, 2020: Google Drive)]-->F1
   E3A-->END
 
   D04[(World Settlement Footprint 2015, Marconcini et al. 2020)]-->C3
@@ -44,16 +44,19 @@ flowchart TD
   F1[Separación de subconjuntos 2015 de entranamiento, validación 10% y control 10%: Colab scipy]--80%-->F2A
   F1--10%-->F2B
   F1--10%-->F2C
-  F2A[(Datos de entrenamiento 2015)]-->END
-  F2B[(Datos de validación 2015)]-->END
-  F2C[(Datos de control 2015)]-->END
+  F2A[(Datos de entrenamiento 2015: ANN y SVM)]-->END
+  F2B[(Datos de validación 2015: ANN y SVM)]-->END
+  F2C[(Datos de control 2015: ANN y SVM)]-->END
   F2A-->J2
   F2B-->J2
   F2C-->J2
-  J2[[Convoluton]]==>J3
-  J3[[Pooling]]--CNN-->F2A
-  J3--CNN-->F2B
-  J3--CNN-->F2C
+  J2[[Convoluton para CNN]]==>J3
+  J3[[Pooling para CNN]]-->F3A
+  J3-->F3B
+  J3-->F3C
+  F3A[(Datos de entrenamiento 2015: CNN)]-->END
+  F3B[(Datos de validación 2015: CNN)]-->END
+  F3C[(Datos de control 2015: CNN)]-->END
 
   H1[/Conjuntos de hiperparámetros a probar/]-->END
 
