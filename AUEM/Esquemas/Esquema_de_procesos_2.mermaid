@@ -1,7 +1,18 @@
 flowchart TD
-  H1[/Conjuntos de hiperparámetros a probar/]-->ANN1
+  H1[/Conjuntos de hiperparámetros a probar/]
+  H1-->ANN1
   H1-->CNN1
   H1-->SVM1
+
+  E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2 en 2000, 2010, 2015, 2020: Google Drive)]
+  F2A[(Datos de entrenamiento 2015: ANN y SVM)]
+  F2B[(Datos de validación 2015: ANN y SVM)]
+  F2C[(Datos de control 2015: ANN y SVM)]
+  F3A[(Datos de entrenamiento 2015: CNN)]
+  F3B[(Datos de validación 2015: CNN)]
+  F3C[(Datos de control 2015: CNN)]
+  B8[(Tabla CSV de estados de superficie en zonas de referencia en 2000, 2010 y 2020 según la nomenclatura de clases)]
+
 
   ANN1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->ANN2
   ANN2[[Prediccion con ANN: Colab TensorFlow]]-->ANN3
