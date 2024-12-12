@@ -5,6 +5,21 @@ flowchart TD
     Z8C[/Reporte modelo 2000 de ACC, AUC, TSS, Kappa, F1 por clase/]
   end
 
+  subgraph s2["Angel et al."]
+    CLASS1[[Clasificcion banaria construido/no-construido: GEE]]
+    CLASS2[[Calculo de promedios de 0 y 1 en un radio la capa binaria en radio 584 m]]
+    CLASS3[[Reclasificar pixeles del espacio construido en urbanos, suburbanos y rurales]]
+    CLASS4[[Identificar solo pixeles urbanos y suburbanos]]
+    CLASS4A[[Calculo de maximos en un radio de capa binaria en radio 100 m]]
+    CLASS5[[Reclasificar pixeles urbanos-suburbanos-rurales-marginal]]
+    CLASS6[[Vectorizar espacio abierto no-marginal]]
+    CLASS7[[Calcular areas de poligonos de espaci abierto]]
+    CLASS8[[Filtrar poligonos menores que 200]]
+    CLASS9[[Etiquetar poligonos segun tamaño como abierto capturado y rural]]
+    CLASS10[[Rasterizar poligonos de espacio abierto etiquetado]]
+    CLASS11[[Reclasificar poligonos de espacio urbano y abierto en 7 categorias]]
+  end
+
   START2([Datos de referencia de etapa anterior])
   START2-->B6
   START2-->B8
@@ -30,24 +45,24 @@ flowchart TD
 
   END([Evaluación de precisión de mancha urbana de la zona concluida])
 
-  CLASS1[[Clasificcion banaria construido/no-construido: GEE]]-->CLASS2
+  CLASS1-->CLASS2
   CLASS1-->CLASS3
-  CLASS2[[Calculo de promedios de 0 y 1 en un radio la capa binaria en radio 584 m]]-->CLASS3
-  CLASS3[[Reclasificar pixeles del espacio construido en urbanos, suburbanos y rurales]]-->CLASS4
+  CLASS2-->CLASS3
+  CLASS3-->CLASS4
   CLASS3-->R1
   CLASS3-->CLASS5
   R1[(Capa de urbano-suburbano-rural)]
   R1-->EXPORT
-  CLASS4[[Identificar solo pixeles urbanos y suburbanos]]-->CLASS4A
-  CLASS4A[[Calculo de maximos en un radio de capa binaria en radio 100 m]]-->CLASS5
-  CLASS5[[Reclasificar pixeles urbanos-suburbanos-rurales-marginal]]-->CLASS6
+  CLASS4-->CLASS4A
+  CLASS4A-->CLASS5
+  CLASS5-->CLASS6
   CLASS5-->CLASS11
-  CLASS6[[Vectorizar espacio abierto no-marginal]]-->CLASS7
-  CLASS7[[Calcular areas de poligonos de espaci abierto]]-->CLASS8
-  CLASS8[[Filtrar poligonos menores que 200 Ha]]-->CLASS9
-  CLASS9[[Etiquetar poligonos segun tamaño como abierto capturado y rural]]-->CLASS10
-  CLASS10[[Rasterizar poligonos de espacio abierto etiquetado]]-->CLASS11
-  CLASS11[[Reclasificar poligonos de espacio urbano y abierto en 7 categorias]]-->R2
+  CLASS6-->CLASS7
+  CLASS7-->CLASS8
+  CLASS8-->CLASS9
+  CLASS9-->CLASS10
+  CLASS10-->CLASS11
+  CLASS11-->R2
   R2[(Capa de clasificacion urbano-suburbano-rural de 7 categorias)]
   R2-->EXPORT
   EXPORT[[Exportar capas en formato GeoTIFF en Google Drive]]
