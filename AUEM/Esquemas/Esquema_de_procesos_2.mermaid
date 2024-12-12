@@ -6,10 +6,16 @@ flowchart TD
 
   E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2 en 2000, 2010, 2015, 2020: Google Drive)]
   F2A[(Datos de entrenamiento 2015: ANN y SVM)]
+  F2A-->ANN1
+  F2A-->SVM1
   F2B[(Datos de validación 2015: ANN y SVM)]
+  F2B-->ANN3
+  F2B-->SVM3
   F2C[(Datos de control 2015: ANN y SVM)]
   F3A[(Datos de entrenamiento 2015: CNN)]
+  F3A-->CNN1
   F3B[(Datos de validación 2015: CNN)]
+  F3B-->CNN3
   F3C[(Datos de control 2015: CNN)]
   B8[(Tabla CSV de estados de superficie en zonas de referencia en 2000, 2010 y 2020 según la nomenclatura de clases)]
 
@@ -20,6 +26,20 @@ flowchart TD
   ANN4{{Hiperparametros óptimos}}--si-->MODEL1
   ANN4--no-->ANN4A
   ANN4A[[Ajuste de hiperparámetros]]-->ANN1
+ 
+  CNN1[[Entrenamiento CNN en varias temporadas]]
+  CNN2[[Prediccion con CNN: Colab TensorFlow]]-->CNN3
+  CNN3[[Evaluación de modelo con datos de validacion]]-->CNN4
+  CNN4{{Hiperparametros óptimos}}--si-->MODEL1
+  CNN4--no-->CNN4A
+  CNN4A[[Ajuste de hiperparámetros]]-->CNN1
+
+  SVM1[[Entrenamiento SVM]]-->SVM2
+  SVM2[[Prediccion con SVM: Colab]]-->SVM3
+  SVM3[[Evaluación de modelo con datos de validacion]]-->SVM4
+  SVM4{{Hiperparametros óptimos}}--si-->MODEL1
+  SVM4--no-->SVM4A
+  SVM4A[[Ajuste de hiperparámetros]]-->SVM1
 
   MODEL1[[Guardar el objeto de modelo 2015 en Google Drive]]-->MODEL2
   MODEL1-->MODEL4
@@ -31,26 +51,6 @@ flowchart TD
   MODEL5[/Capa categorica para 2015 de espacio construido, espacio no-construido y agua/]-->Z1
   MODEL6[[predicción con datos 2020]]-->MODEL7
   MODEL7[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
-
- 
-  CNN1[[Entrenamiento CNN en varias temporadas]]
-  CNN2[[Prediccion con CNN: Colab TensorFlow]]-->CNN3
-  CNN3[[Evaluación de modelo con datos de validacion]]-->CNN4
-  CNN4{{Hiperparametros óptimos}}--si-->MODEL1
-  CNN4--no-->CNN4A
-  CNN4A[[Ajuste de hiperparámetros]]-->CNN1
-
-
-  SVM1[[Entrenamiento SVM]]-->SVM2
-  SVM2[[Prediccion con SVM: Colab]]-->SVM3
-  SVM3[[Evaluación de modelo con datos de validacion]]-->SVM4
-  SVM4{{Hiperparametros óptimos}}--si-->MODEL1
-  SVM4--no-->SVM4A
-  SVM4A[[Ajuste de hiperparámetros]]-->SVM1
-
-  M1[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
-  M2[/Capa categorica para 2010 de espacio construido, espacio no-construido y agua/]-->Z1
-  M3[/Capa categorica para 2000 de espacio construido, espacio no-construido y agua/]-->Z1
 
   Z1[[Guardar en Google Drive como numpy array: Colab numpy]]-->Z2
   Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->END
