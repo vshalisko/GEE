@@ -11,11 +11,12 @@ flowchart TD
   C4[[Descarga de segmentos de capa cuerpos de agua WBM en 2015 y su conversión en numpy array: Colab ee]]-->C5
   C5[[Unión y reetiquetado de variables por segmento según esquema de tres categorías]]-->C6
   C6[[Union de numpy arrays de los segmentos variable categorica en array completo de referencia 2015: Colab numpy]]-->E4
+  E4[[Exportación a Google Drive]]-->E4A
   D01[(USGS Landsat 8 Level 2, Collection 2, Tier 1 LANDSAT_LC08_C02_T1_L2)]-->D1
   D02[(USGS Landsat 5 Level 2, Collection 2, Tier 1 LANDSAT_LT05_C02_T1_L2)]-->D1
   D03[(Harmonized Sentinel-2 MSI: MultiSpectral Instrument, Level-2A COPERNICUS_S2_SR_HARMONIZED)]-->D1
-  D1[Selección de imagenes de satelite L5 y L8 para fechas de interés en 2000, 2010, 2015, 2020]-->D2
-  D2{{Evaluación de calidad de la imagen}}
+  D1[Selección de imagenes de satelite L5, L8 y Sentinel 2 para fechas de interés en 2000, 2010, 2015, 2020]-->D2
+  D2{{Evaluación de calidad de la imagen/pixeles *nubes, sombra, reflectividad, valores faltantes}}
   D2--imagen/pixel con calidad suficiente disponible-->E1
   D2--imagen/pixel con calidad suficiente no disponible-->D3
   D3[/Toma de imagen/pixel de fecha alternativa/]-->D1
@@ -23,8 +24,14 @@ flowchart TD
   E2[[Union de numpy arrays de los segmentos en array completo por fecha: Colab numpy]]-->E3
   E3[[Exportación a Google Drive]]-->E3A
   E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2: Google Drive)]-->F1
-  E4[(Base de datos de numpy arrays de variables con etiquetas categoricas conocidas en 2015: Google Drive)]-->F1
-  F1[Separación de subconjuntos de entranamiento, validación y control: Colab scipy]-->J1
+  E4A[(Base de datos de numpy arrays de variables con etiquetas categoricas conocidas en 2015: Google Drive)]-->F1
+  F1[Separación de subconjuntos 2015 de entranamiento, validación 10% y control 10%: Colab scipy]--80%-->F2A
+  F1--10%-->F2B
+  F1--10%-->F2C
+  F2A[(Datos de entrenamiento 2015)]-->J1
+  F2B[(Datos de validación 2015)]]
+  F2C[(Datos de control 2015)]]
+  
   J1{{Verificación de prerequisitos para arranque de analisis ANN en determinada fecha}}-->K1
   K1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->K2
   K2[[Prediccion con ANN: Colab TensorFlow]]-->M1
