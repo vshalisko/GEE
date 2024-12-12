@@ -21,6 +21,9 @@ flowchart TD
   E3A-->MODEL4
   E3A-->MODEL6
   E3A-->MODEL8
+  E3A-->MODEL9
+  E3A-->MODEL10
+
   F2A[(Datos de entrenamiento 2015: ANN y SVM)]
   F2A-->ANN1
   F2B[(Datos de validación 2015: ANN y SVM)]
@@ -60,7 +63,7 @@ flowchart TD
   MODEL8[[Entrenamiento de modelos secundarios para datos de otro sensor]]-->MODEL9
   MODEL9[[Prediccion con datos 2010]]-->MODEL9A
   MODEL9A[/Capa categorica para 2010 de espacio construido, espacio no-construido y agua/]-->Z1
-  MODEL10[[Prediccion con datos 2000]]--MODEL10A
+  MODEL10[[Prediccion con datos 2000]]-->MODEL10A
   MODEL10A[/Capa categorica para 2000 de espacio construido, espacio no-construido y agua/]-->Z1
 
   Z1[[Guardar en Google Drive como numpy array: Colab numpy]]-->Z2
