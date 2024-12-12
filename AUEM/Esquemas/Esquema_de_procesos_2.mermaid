@@ -1,7 +1,21 @@
 flowchart TD
+
   H1[/Conjuntos de hiperparámetros a probar/]
   H1-->ANN1
   H1-->MODEL8
+
+  START([Datos raster de etapa anterior])
+  START-->E3A
+  START-->F2A
+  START-->F2B
+  START-->F2C
+  START-->F3A
+  START-->F3B
+  START-->F3C
+
+  START2([Datos de referencia de etapa anterior])
+  START2-->B6
+  START2-->B8
 
   E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2 en 2000, 2010, 2015, 2020: Google Drive)]
   E3A-->MODEL4
