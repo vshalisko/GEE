@@ -5,6 +5,8 @@ flowchart TD
   H1-->SVM1
 
   E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2 en 2000, 2010, 2015, 2020: Google Drive)]
+  E3A-->MODEL4
+  E3A-->MODEL6
   F2A[(Datos de entrenamiento 2015: ANN y SVM)]
   F2A-->ANN1
   F2A-->SVM1
@@ -12,13 +14,14 @@ flowchart TD
   F2B-->ANN3
   F2B-->SVM3
   F2C[(Datos de control 2015: ANN y SVM)]
+  F2C-->MODEL2
   F3A[(Datos de entrenamiento 2015: CNN)]
   F3A-->CNN1
   F3B[(Datos de validación 2015: CNN)]
   F3B-->CNN3
   F3C[(Datos de control 2015: CNN)]
+  F3C-->MODEL2
   B8[(Tabla CSV de estados de superficie en zonas de referencia en 2000, 2010 y 2020 según la nomenclatura de clases)]
-
 
   ANN1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->ANN2
   ANN2[[Prediccion con ANN: Colab TensorFlow]]-->ANN3
@@ -53,9 +56,9 @@ flowchart TD
   MODEL7[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
 
   Z1[[Guardar en Google Drive como numpy array: Colab numpy]]-->Z2
-  Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->END
+  Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->Z4
   Z2-->Z4
-  Z4[(Base de datos de numpy arrays y GeoTIFFs de espacio construido en 2000, 2010, 2015 y 2020)]
+  Z4[(Base de datos de numpy arrays y GeoTIFFs de espacio construido en 2000, 2010, 2015 y 2020)]-->END
 
   Z5[[Descarga de GeoTIFF de predicción en 2000, 2010, 2020]]-->Z6
   Z6[[Extraccion de datos de predicción en zonas de referencia: R]]-->Z7
