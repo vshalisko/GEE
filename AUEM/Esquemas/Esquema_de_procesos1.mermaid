@@ -6,6 +6,7 @@ flowchart TD
   B4[Separación de definición de zonas de referencia en conjuntos de tamaño permitido por GEE]-->B5
   B5[[Descarga de conjuntos de zonas de referencia en formato KML]]-->B6
   B6[(Zonas de referencia en KML en Google Drive)]-->B7
+  B6-->END
   B7[/Recolecta de información del estado de campo en cuadrantes de referencia en 2000, 2010 y 2020 por medio de captura por un experto/]-->B8
   B8[(Tabla CSV de estados de superficie en zonas de referencia en 2000, 2010 y 2020 según la nomenclatura de clases)]-->END
 
@@ -57,7 +58,5 @@ flowchart TD
   F3A[(Datos de entrenamiento 2015: CNN)]-->END
   F3B[(Datos de validación 2015: CNN)]-->END
   F3C[(Datos de control 2015: CNN)]-->END
-
-  H1[/Conjuntos de hiperparámetros a probar/]-->END
 
   END([Preparación de datos para detección de mancha urbana concluido])
