@@ -35,26 +35,41 @@ flowchart TD
   F1--10%-->F2B
   F1--10%-->F2C
   F2A[(Datos de entrenamiento 2015)]--ANN-->ANN1
-  F2B[(Datos de validación 2015)]
+  F2B[(Datos de validación 2015)]--ANN-->ANN2
   F2C[(Datos de control 2015)]
   F2A--SVM-->SVM1
-  F2A--CNN-->J2
-  F2B--CNN-->J2
-  F2C--CNN-->J2
+  F2A-->J2
+  F2B-->J2
+  F2C-->J2
   J2[[Convoluton]]==>J3
-  J3[[Pooling]]-->CNN1
-  H1[/Hiperparámetros iniciales/]-->ANN1
+  J3[[Pooling]]--CNN-->CNN1
+  H1[/Conjuntos de hiperparámetros a comparar/]-->ANN1
   H1-->CNN1
   H1-->SVM1
+
   ANN1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->ANN2
-  ANN2[[Prediccion con ANN: Colab TensorFlow]]-->M1
+  ANN2[[Prediccion con ANN: Colab TensorFlow]]-->ANN3
+  ANN3[[Evaluación de modelo con datos de validacion]]-->ANN4
+  ANN4{{Hiperparametros óptimos}}--si-->ANN5
+  ANN4--no-->ANN4A
+  ANN4A[[Ajuste de hiperparámetros]]-->ANN1
+  ANN5[Guardar el objeto de modelo 2015 en Google Drive: Colab TensorFlow]-->ANN6
+  ANN5-->ANN6A
+  ANN6[Evalouación de modelo con datos de control 2015]-->ANN7
+  ANN6A[Prediccion con datos 2015]-->ANN8
+  ANN7[/Reporte modelo 2015 de ACC, AUC, TSS, Kappa, F1 por clase/]
+  ANN8[/Capa categorica para 2015 de espacio construido, espacio no-construido y agua/]-->ANN9
+  ANN9[Guardar en Google Drive prediccion categorica 2015 como numpy array: Colab numpy]-->Z4
+  
   CNN1[[Entrenamiento CNN en varias temporadas]]
   SVM1[[Entrenamiento SVM]]
+
   M1[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
   M2[/Capa categorica para 2010 de espacio construido, espacio no-construido y agua/]-->Z1
   M3[/Capa categorica para 2000 de espacio construido, espacio no-construido y agua/]-->Z1
+
   Z1[[Guardar en Google Drive como numpy array: Colab numpy]]-->Z2
   Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->Z3
   Z2-->Z4
-  Z4[(Base de datos de numpy arrays y GeoTIFFs de espacio construido en 2000, 2010 y 2020)]
+  Z4[(Base de datos de numpy arrays y GeoTIFFs de espacio construido en 2000, 2010, 2015 y 2020)]
   Z3([Estimación de mancha urbana de la zona concluida])
