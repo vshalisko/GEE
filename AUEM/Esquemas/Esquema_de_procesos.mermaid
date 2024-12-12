@@ -35,18 +35,24 @@ flowchart TD
   F1--10%-->F2B
   F1--10%-->F2C
   F2A[(Datos de entrenamiento 2015)]--ANN-->ANN1
-  F2A--CNN-->J2
-  F2A--SVM-->SVM1
   F2B[(Datos de validación 2015)]
   F2C[(Datos de control 2015)]
+  F2A--SVM-->SVM1
+  F2A--CNN-->J2
   J2[Convoluton]-->J3
   J3[Pooling]--CNN1
-  J4[/Hiperparémetros iniciales/]-->ANN1
-  J4-->CNN1
-  J4-->SVM1
-  ANN1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->ANN1
+  H1[/Hiperparémetros iniciales/]-->ANN1
+  H1-->CNN1
+  H1-->SVM1
+  ANN1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->ANN2
   ANN2[[Prediccion con ANN: Colab TensorFlow]]-->M1
   CNN1[[Entrenamiento CNN en varias temporadas]]
   SVM1[[Entrenamiento SVM]]
-  M1[/Capa categorica de espacio construido, espacio no-construido y agua/]-->Z1
-  Z1([Analisis de zona concluido])
+  M1[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
+  M2[/Capa categorica para 2010 de espacio construido, espacio no-construido y agua/]-->Z1
+  M3[/Capa categorica para 2000 de espacio construido, espacio no-construido y agua/]-->Z1
+  Z1[[Guardar en Google Drive como numpy array: Colab numpy]]-->Z2
+  Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->Z3
+  Z2-->Z4
+  Z4[(Base de datos de numpy arrays y GeoTIFFs de espacio construido en 2000, 2010 y 2020)]
+  Z3([Estimación de mancha urbana de la zona concluida])
