@@ -1,12 +1,12 @@
 flowchart TD
   H1[/Conjuntos de hiperparámetros a probar/]
   H1-->ANN1
-  H1-->CNN1
-  H1-->SVM1
+  H1-->MODEL8
 
   E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2 en 2000, 2010, 2015, 2020: Google Drive)]
   E3A-->MODEL4
   E3A-->MODEL6
+  E3A-->MODEL8
   F2A[(Datos de entrenamiento 2015: ANN y SVM)]
   F2A-->ANN1
   F2B[(Datos de validación 2015: ANN y SVM)]
@@ -20,6 +20,9 @@ flowchart TD
   F3C[(Datos de control 2015: CNN)]
   F3C-->MODEL2
   B8[(Tabla CSV de estados de superficie en zonas de referencia en 2000, 2010 y 2020 según la nomenclatura de clases)]
+  B8-->Z7
+  B6[(Zonas de referencia en KML en Google Drive)]
+  B6-->Z6
 
   ANN1[[Entrenamiento de ANN, CNN o SVM en varias temporadas: Colab TensorFlow y/o SVM]]-->ANN2
   ANN2[[Prediccion con datos de validacion]]-->ANN3
@@ -36,8 +39,15 @@ flowchart TD
   MODEL3A[/Reporte modelo 2015 de ACC, AUC, TSS, Kappa, F1 por clase/]
   MODEL4[[Prediccion con datos completos 2015]]-->MODEL5
   MODEL5[/Capa categorica para 2015 de espacio construido, espacio no-construido y agua/]-->Z1
-  MODEL6[[predicción con datos 2020]]-->MODEL7
-  MODEL7[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
+  MODEL5-->MODEL8
+  MODEL6[[predicción con datos 2020]]-->MODEL6A
+  MODEL6A[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
+
+  MODEL8[[Entrenamiento de modelos secundarios para datos de otro sensor]]-->MODEL9
+  MODEL9[[Prediccion con datos 2010]]-->MODEL9A
+  MODEL9A[/Capa categorica para 2010 de espacio construido, espacio no-construido y agua/]-->Z1
+  MODEL10[[Prediccion con datos 2000]]--MODEL10A
+  MODEL10A[/Capa categorica para 2000 de espacio construido, espacio no-construido y agua/]-->Z1
 
   Z1[[Guardar en Google Drive como numpy array: Colab numpy]]-->Z2
   Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->Z4
