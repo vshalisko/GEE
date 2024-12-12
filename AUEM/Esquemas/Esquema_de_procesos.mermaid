@@ -39,9 +39,11 @@ flowchart TD
   F2C[(Datos de control 2015)]
   F2A--SVM-->SVM1
   F2A--CNN-->J2
-  J2[Convoluton]-->J3
-  J3[Pooling]--CNN1
-  H1[/Hiperparémetros iniciales/]-->ANN1
+  F2B--CNN-->J2
+  F2C--CNN-->J2
+  J2[[Convoluton]]==>J3
+  J3[[Pooling]]-->CNN1
+  H1[/Hiperparámetros iniciales/]-->ANN1
   H1-->CNN1
   H1-->SVM1
   ANN1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->ANN2
