@@ -7,7 +7,7 @@ flowchart TD
   B2[/Definir densidad de muestreo de control/]-->B3
   B3[Definición aleatoria de zonas de referencia y de su enumeración: GEE]-->B4
   B4[Separación de definición de zonas de referencia en conjuntos de tamaño permitido por GEE]-->B5
-  B5[Descarga de conjuntos de zonas de referencia en formato KML]-->B6
+  B5[[Descarga de conjuntos de zonas de referencia en formato KML]]-->B6
   B6[(Zonas de referencia en KML en Google Drive)]
   C2-->C3
   C2-->C4
@@ -34,12 +34,19 @@ flowchart TD
   F1[Separación de subconjuntos 2015 de entranamiento, validación 10% y control 10%: Colab scipy]--80%-->F2A
   F1--10%-->F2B
   F1--10%-->F2C
-  F2A[(Datos de entrenamiento 2015)]-->J1
+  F2A[(Datos de entrenamiento 2015)]--ANN-->ANN1
+  F2A--CNN-->J2
+  F2A--SVM-->SVM1
   F2B[(Datos de validación 2015)]
   F2C[(Datos de control 2015)]
-  
-  J1{{Verificación de prerequisitos para arranque de analisis ANN en determinada fecha}}-->K1
-  K1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->K2
-  K2[[Prediccion con ANN: Colab TensorFlow]]-->M1
+  J2[Convoluton]-->J3
+  J3[Pooling]--CNN1
+  J4[/Hiperparémetros iniciales/]-->ANN1
+  J4-->CNN1
+  J4-->SVM1
+  ANN1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->ANN1
+  ANN2[[Prediccion con ANN: Colab TensorFlow]]-->M1
+  CNN1[[Entrenamiento CNN en varias temporadas]]
+  SVM1[[Entrenamiento SVM]]
   M1[/Capa categorica de espacio construido, espacio no-construido y agua/]-->Z1
   Z1([Analisis de zona concluido])
