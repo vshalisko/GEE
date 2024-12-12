@@ -13,10 +13,6 @@ flowchart TD
   START-->F3B
   START-->F3C
 
-  START2([Datos de referencia de etapa anterior])
-  START2-->B6
-  START2-->B8
-
   E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2 en 2000, 2010, 2015, 2020: Google Drive)]
   E3A-->MODEL4
   E3A-->MODEL6
@@ -71,12 +67,4 @@ flowchart TD
   Z2-->Z4
   Z4[(Base de datos de numpy arrays y GeoTIFFs de espacio construido en 2000, 2010, 2015 y 2020)]-->END
 
-  Z5[[Descarga de GeoTIFF de predicción en 2000, 2010, 2020]]-->Z6
-  Z6[[Extraccion de datos de predicción en zonas de referencia: R]]-->Z7
-  Z7[[Evalouación de modelo con datos de control externos]]-->Z8A
-  Z7-->Z8B
-  Z7-->Z8C
-  Z8A[/Reporte modelo 2020 de ACC, AUC, TSS, Kappa, F1 por clase/]-->END
-  Z8B[/Reporte modelo 2010 de ACC, AUC, TSS, Kappa, F1 por clase/]-->END
-  Z8C[/Reporte modelo 2000 de ACC, AUC, TSS, Kappa, F1 por clase/]-->END
   END([Estimación de mancha urbana de la zona concluida])
