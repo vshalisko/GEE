@@ -1,12 +1,13 @@
 flowchart TD
   A1([Definicion de zona de analisis])-->B1
   B1[/Definir coordenadas UTM del centro, coordenadas de extremos LLC y URC, zona UTM CRS/]-->C1
-  C1[Definición de rectangulo para descarga de imagenes de satelite: Colab ee]-->C2
-  C2[[Segmentación del rectangulo en zonas permitidos para descarga de GEE: Colab ee]]-->D1
+  C1[Definición del rectangulo para descarga de imagenes de satelite: Colab ee]-->C2
+  C2[[Segmentación del rectangulo en zonas permitidos para descarga por GEE: Colab ee]]-->D1
   C2-->C3
   C2-->C4
-  C3[[Descarga de segmentos de capa de urbanización en 2015 y su conversión en numpy array: Colab ee]]-->E4
-  C4[[Descarga de segmentos de capa cuerpos de agua en 2015 y su conversión en numpy array]]-->E4
+  C3[[Descarga de segmentos de capa re referencia de urbanización en 2015 y su conversión en numpy array: Colab ee]]-->E4
+  C4[[Descarga de segmentos de capa cuerpos de agua en 2015 y su conversión en numpy array: Colab ee]]-->E4
+  D01[(USGS Landsat 8 Level 2, Collection 2, Tier 1 LANDSAT_LC08_C02_T1_L2)]-->D1
   D1[Selección de imagenes de satelite L5 y L8 para cada fecha de interés 2000, 2010, 2015, 2020]-->D2
   D2{{Evaluación de disponibilidad y calidad de la imagen}}
   D2--imagen con calidad suficiente disponible-->E1
