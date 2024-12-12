@@ -1,27 +1,20 @@
 flowchart TD
   A1([Definicion de zona de analisis])-->B1
   B1[/Definir coordenadas UTM del centro, coordenadas de extremos LLC y URC, zona UTM CRS/]-->C1
-  C1[Definición del rectangulo para descarga de imagenes de satelite: Colab ee]-->C2
-  C1-->B3
   B2[/Definir densidad de muestreo de control/]-->B3
   B3[Definición aleatoria de zonas de referencia y de su enumeración: GEE]-->B4
   B4[Separación de definición de zonas de referencia en conjuntos de tamaño permitido por GEE]-->B5
   B5[[Descarga de conjuntos de zonas de referencia en formato KML]]-->B6
   B6[(Zonas de referencia en KML en Google Drive)]-->B7
-  B6-->ANN11A
   B7[/Recolecta de información del estado de campo en cuadrantes de referencia en 2000, 2010 y 2020 por medio de captura por un experto/]-->B8
-  B8[(Tabla CSV de estados de superficie en zonas de referencia en 2000, 2010 y 2020 según la nomenclatura de clases)]-->Z6
+  B8[(Tabla CSV de estados de superficie en zonas de referencia en 2000, 2010 y 2020 según la nomenclatura de clases)]-->END
 
+  C1[Definición del rectangulo para descarga de imagenes de satelite: Colab ee]-->C2
+  C1-->B3
   C2[[Segmentación del rectangulo en zonas permitidos para descarga por GEE: Colab ee]]-->D1
   C2-->C3
   C2-->C4
-  D04[(World Settlement Footprint 2015, Marconcini et al. 2020)]-->C3
-  C3[[Descarga de segmentos de capa re referencia de urbanización en 2015 y su conversión en numpy array: Colab ee]]-->E4
-  D05[(GLO-30: Global 30m Digital Elevation Model)]-->C4
-  C4[[Descarga de segmentos de capa cuerpos de agua WBM en 2015 y su conversión en numpy array: Colab ee]]-->C5
-  C5[[Unión y reetiquetado de variables por segmento según esquema de tres categorías]]-->C6
-  C6[[Union de numpy arrays de los segmentos variable categorica en array completo de referencia 2015: Colab numpy]]-->E4
-  E4[[Exportación a Google Drive]]-->E4A
+
   D01[(USGS Landsat 8 Level 2, Collection 2, Tier 1 LANDSAT_LC08_C02_T1_L2)]-->D1
   D02[(USGS Landsat 5 Level 2, Collection 2, Tier 1 LANDSAT_LT05_C02_T1_L2)]-->D1
   D03[(Harmonized Sentinel-2 MSI: MultiSpectral Instrument, Level-2A COPERNICUS_S2_SR_HARMONIZED)]-->D1
@@ -33,77 +26,35 @@ flowchart TD
   E1[[Descarga de los segmentos de la imagen de GEE y su conversion en numpu array: Colab ee]]-->E2
   E2[[Union de numpy arrays de los segmentos en array completo por fecha: Colab numpy]]-->E3
   E3[[Exportación a Google Drive]]-->E3A
+
   E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2: Google Drive)]-->F1
-  E3A--2015-->MODEL4
-  E3A--2020-->MODEL6
+  E3A-->END
+
+  D04[(World Settlement Footprint 2015, Marconcini et al. 2020)]-->C3
+  C3[[Descarga de segmentos de capa re referencia de urbanización en 2015 y su conversión en numpy array: Colab ee]]-->E4
+  D05[(GLO-30: Global 30m Digital Elevation Model)]-->C4
+  C4[[Descarga de segmentos de capa cuerpos de agua WBM en 2015 y su conversión en numpy array: Colab ee]]-->C5
+  C5[[Unión y reetiquetado de variables por segmento según esquema de tres categorías]]-->C6
+  C6[[Union de numpy arrays de los segmentos variable categorica en array completo de referencia 2015: Colab numpy]]-->E4
+  E4[[Exportación a Google Drive]]-->E4A
+
   E4A[(Base de datos de numpy arrays de variables con etiquetas categoricas conocidas en 2015: Google Drive)]-->F1
+  E4A-->END
+
   F1[Separación de subconjuntos 2015 de entranamiento, validación 10% y control 10%: Colab scipy]--80%-->F2A
   F1--10%-->F2B
   F1--10%-->F2C
-  F2A[(Datos de entrenamiento 2015)]--ANN-->ANN1
-  F2B[(Datos de validación 2015)]--ANN-->ANN2
-  F2C[(Datos de control 2015)]-->MODEL2
-  F2A--SVM-->SVM1
+  F2A[(Datos de entrenamiento 2015)]-->END
+  F2B[(Datos de validación 2015)]-->END
+  F2C[(Datos de control 2015)]-->END
   F2A-->J2
   F2B-->J2
   F2C-->J2
   J2[[Convoluton]]==>J3
-  J3[[Pooling]]--CNN-->CNN1
-  J3--CNN-->CNN2
-  H1[/Conjuntos de hiperparámetros a probar/]-->ANN1
-  H1-->CNN1
-  H1-->SVM1
+  J3[[Pooling]]--CNN-->F2A
+  J3--CNN-->F2B
+  J3--CNN-->F2C
 
-  ANN1[[Entrenamiento de ANN en varias temporadas: Colab TensorFlow]]-->ANN2
-  ANN2[[Prediccion con ANN: Colab TensorFlow]]-->ANN3
-  ANN3[[Evaluación de modelo con datos de validacion]]-->ANN4
-  ANN4{{Hiperparametros óptimos}}--si-->MODEL1
-  ANN4--no-->ANN4A
-  ANN4A[[Ajuste de hiperparámetros]]-->ANN1
+  H1[/Conjuntos de hiperparámetros a probar/]-->END
 
-  MODEL1[[Guardar el objeto de modelo 2015 en Google Drive]]-->MODEL2
-  MODEL1-->MODEL4
-  MODEL1-->MODEL6
-  MODEL2[[Prediccion con datos de control 2015]]-->MODEL3
-  MODEL3[[Evaluación de modelo con datos de control 2015]]-->MODEL3A
-  MODEL3A[/Reporte modelo 2015 de ACC, AUC, TSS, Kappa, F1 por clase/]
-  MODEL4[[Prediccion con datos completos 2015]]-->MODEL5
-  MODEL5[/Capa categorica para 2015 de espacio construido, espacio no-construido y agua/]-->Z1
-  MODEL6[[predicción con datos 2020]]-->MODEL7
-  MODEL7[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
-
- 
-  CNN1[[Entrenamiento CNN en varias temporadas]]
-  CNN2[[Prediccion con CNN: Colab TensorFlow]]-->CNN3
-  CNN3[[Evaluación de modelo con datos de validacion]]-->CNN4
-  CNN4{{Hiperparametros óptimos}}--si-->MODEL1
-  CNN4--no-->CNN4A
-  CNN4A[[Ajuste de hiperparámetros]]-->CNN1
-
-
-  SVM1[[Entrenamiento SVM]]-->SVM2
-  SVM2[[Prediccion con SVM: Colab]]-->SVM3
-  SVM3[[Evaluación de modelo con datos de validacion]]-->SVM4
-  SVM4{{Hiperparametros óptimos}}--si-->MODEL1
-  SVM4--no-->SVM4A
-  SVM4A[[Ajuste de hiperparámetros]]-->SVM1
-
-  M1[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
-  M2[/Capa categorica para 2010 de espacio construido, espacio no-construido y agua/]-->Z1
-  M3[/Capa categorica para 2000 de espacio construido, espacio no-construido y agua/]-->Z1
-
-  Z1[[Guardar en Google Drive como numpy array: Colab numpy]]-->Z2
-  Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->END
-  Z2-->Z4
-  Z4[(Base de datos de numpy arrays y GeoTIFFs de espacio construido en 2000, 2010, 2015 y 2020)]
-
-  Z5[[Descarga de GeoTIFF de predicción en 2000, 2010, 2020]]-->Z6
-  Z6[[Extraccion de datos de predicción en zonas de referencia: R]]-->Z7
-  Z7[[Evalouación de modelo con datos de control externos]]-->Z8A
-  Z7-->Z8B
-  Z7-->Z8C
-  Z8A[/Reporte modelo 2020 de ACC, AUC, TSS, Kappa, F1 por clase/]-->END
-  Z8B[/Reporte modelo 2010 de ACC, AUC, TSS, Kappa, F1 por clase/]-->END
-  Z8C[/Reporte modelo 2000 de ACC, AUC, TSS, Kappa, F1 por clase/]-->END
-
-  END([Estimación de mancha urbana de la zona concluida])
+  END([Preparación de datos para detección de mancha urbana concluido])
