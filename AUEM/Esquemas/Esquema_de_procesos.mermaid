@@ -3,12 +3,16 @@ flowchart TD
   B1[/Definir coordenadas UTM del centro, coordenadas de extremos LLC y URC, zona UTM CRS/]-->C1
   C1[Definición del rectangulo para descarga de imagenes de satelite: Colab ee]-->C2
   C1-->B3
-  C2[[Segmentación del rectangulo en zonas permitidos para descarga por GEE: Colab ee]]-->D1
   B2[/Definir densidad de muestreo de control/]-->B3
   B3[Definición aleatoria de zonas de referencia y de su enumeración: GEE]-->B4
   B4[Separación de definición de zonas de referencia en conjuntos de tamaño permitido por GEE]-->B5
   B5[[Descarga de conjuntos de zonas de referencia en formato KML]]-->B6
-  B6[(Zonas de referencia en KML en Google Drive)]
+  B6[(Zonas de referencia en KML en Google Drive)]-->B7
+  B6-->ANN11A
+  B7[/Recolecta de información del estado de campo en cuadrantes de referencia en 2000, 2010 y 2020 por medio de captura por un experto/]-->B8
+  B8[(Tabla CSV de estados de superficie en zonas de referencia en 2000, 2010 y 2020 según la nomenclatura de clases)]-->Z6
+
+  C2[[Segmentación del rectangulo en zonas permitidos para descarga por GEE: Colab ee]]-->D1
   C2-->C3
   C2-->C4
   D04[(World Settlement Footprint 2015, Marconcini et al. 2020)]-->C3
@@ -43,7 +47,7 @@ flowchart TD
   F2C-->J2
   J2[[Convoluton]]==>J3
   J3[[Pooling]]--CNN-->CNN1
-  H1[/Conjuntos de hiperparámetros a comparar/]-->ANN1
+  H1[/Conjuntos de hiperparámetros a probar/]-->ANN1
   H1-->CNN1
   H1-->SVM1
 
@@ -55,21 +59,60 @@ flowchart TD
   ANN4A[[Ajuste de hiperparámetros]]-->ANN1
   ANN5[Guardar el objeto de modelo 2015 en Google Drive: Colab TensorFlow]-->ANN6
   ANN5-->ANN6A
-  ANN6[Evalouación de modelo con datos de control 2015]-->ANN7
-  ANN6A[Prediccion con datos 2015]-->ANN8
+  ANN5-->ANN10
+  ANN6[Evaluación de modelo con datos de control 2015]-->ANN7
+  ANN6A[Prediccion con datos 2015: Colab TensorFlow]-->ANN8
   ANN7[/Reporte modelo 2015 de ACC, AUC, TSS, Kappa, F1 por clase/]
   ANN8[/Capa categorica para 2015 de espacio construido, espacio no-construido y agua/]-->ANN9
-  ANN9[Guardar en Google Drive prediccion categorica 2015 como numpy array: Colab numpy]-->Z4
+  ANN8-->Z4
+  ANN10[[predicción con ANN datos 2020: Colab TensorFlow]]-->ANN10A
+  ANN10A[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z4
   
   CNN1[[Entrenamiento CNN en varias temporadas]]
-  SVM1[[Entrenamiento SVM]]
+  CNN2[[Prediccion con CNN: Colab TensorFlow]]-->CNN3
+  CNN3[[Evaluación de modelo con datos de validacion]]-->CNN4
+  CNN4{{Hiperparametros óptimos}}--si-->CNN5
+  CNN4--no-->CNN4A
+  CNN4A[[Ajuste de hiperparámetros]]-->CNN1
+  CNN5[Guardar el objeto de modelo 2015 en Google Drive: Colab TensorFlow]-->CNN6
+  CNN5-->CNN6A
+  CNN6[Evalouación de modelo con datos de control 2015]-->CNN7
+  CNN6A[Prediccion con datos 2015]-->CNN8
+  CNN7[/Reporte modelo 2015 de ACC, AUC, TSS, Kappa, F1 por clase/]
+  CNN8[/Capa categorica para 2015 de espacio construido, espacio no-construido y agua/]-->CNN9
+  CNN9[Guardar en Google Drive prediccion categorica 2015 como numpy array: Colab numpy]-->Z4
+
+
+  SVM1[[Entrenamiento SVM]]-->SVM2
+  SVM2[[Prediccion con SVM: Colab]]-->SVM3
+  SVM3[[Evaluación de modelo con datos de validacion]]-->SVM4
+  SVM4{{Hiperparametros óptimos}}--si-->SVM5
+  SVM4--no-->SVM4A
+  SVM4A[[Ajuste de hiperparámetros]]-->SVM1
+  SVM5[Guardar el objeto de modelo 2015 en Google Drive: Colab]-->SVM6
+  SVM5-->SVM6A
+  SVM6[Evalouación de modelo con datos de control 2015]-->SVM7
+  SVM6A[Prediccion con datos 2015]-->SVM8
+  SVM7[/Reporte modelo 2015 de ACC, AUC, TSS, Kappa, F1 por clase/]
+  SVM8[/Capa categorica para 2015 de espacio construido, espacio no-construido y agua/]-->SVM9
+  SVM9[Guardar en Google Drive prediccion categorica 2015 como numpy array: Colab numpy]-->Z4
 
   M1[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
   M2[/Capa categorica para 2010 de espacio construido, espacio no-construido y agua/]-->Z1
   M3[/Capa categorica para 2000 de espacio construido, espacio no-construido y agua/]-->Z1
 
   Z1[[Guardar en Google Drive como numpy array: Colab numpy]]-->Z2
-  Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->Z3
+  Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->END
   Z2-->Z4
   Z4[(Base de datos de numpy arrays y GeoTIFFs de espacio construido en 2000, 2010, 2015 y 2020)]
-  Z3([Estimación de mancha urbana de la zona concluida])
+
+  Z5[[Descarga de GeoTIFF de predicción en 2000, 2010, 2020]]-->Z6
+  Z6[[Extraccion de datos de predicción en zonas de referencia: R]]-->Z7
+  Z7[[Evalouación de modelo con datos de control externos]]-->Z8A
+  Z7-->Z8B
+  Z7-->Z8C
+  Z8A[/Reporte modelo 2020 de ACC, AUC, TSS, Kappa, F1 por clase/]-->END
+  Z8B[/Reporte modelo 2010 de ACC, AUC, TSS, Kappa, F1 por clase/]-->END
+  Z8C[/Reporte modelo 2000 de ACC, AUC, TSS, Kappa, F1 por clase/]-->END
+
+  END([Estimación de mancha urbana de la zona concluida])
