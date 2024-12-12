@@ -2,7 +2,13 @@ flowchart TD
   A1([Definicion de zona de analisis])-->B1
   B1[/Definir coordenadas UTM del centro, coordenadas de extremos LLC y URC, zona UTM CRS/]-->C1
   C1[Definición del rectangulo para descarga de imagenes de satelite: Colab ee]-->C2
+  C1-->B3
   C2[[Segmentación del rectangulo en zonas permitidos para descarga por GEE: Colab ee]]-->D1
+  B2[/Definir densidad de muestreo de control/]-->B3
+  B3[Definición aleatoria de zonas de referencia y de su enumeración: GEE]-->B4
+  B4[Separación de definición de zonas de referencia en conjuntos de tamaño permitido por GEE]-->B5
+  B5[Descarga de conjuntos de zonas de referencia en formato KML]-->B6
+  B6[(Zonas de referencia en KML en Google Drive)]
   C2-->C3
   C2-->C4
   D04[(World Settlement Footprint 2015, Marconcini et al. 2020)]-->C3
@@ -20,7 +26,7 @@ flowchart TD
   D2--imagen/pixel con calidad suficiente disponible-->E1
   D2--imagen/pixel con calidad suficiente no disponible-->D3
   D3[/Toma de imagen/pixel de fecha alternativa/]-->D1
-  E1[[Descarga de los segmentos de la imagen y su conversion en numpu array: Colab ee]]-->E2
+  E1[[Descarga de los segmentos de la imagen de GEE y su conversion en numpu array: Colab ee]]-->E2
   E2[[Union de numpy arrays de los segmentos en array completo por fecha: Colab numpy]]-->E3
   E3[[Exportación a Google Drive]]-->E3A
   E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2: Google Drive)]-->F1
