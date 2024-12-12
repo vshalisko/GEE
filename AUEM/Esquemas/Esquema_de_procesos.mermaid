@@ -5,17 +5,24 @@ flowchart TD
   C2[[Segmentación del rectangulo en zonas permitidos para descarga por GEE: Colab ee]]-->D1
   C2-->C3
   C2-->C4
+  D04[(World Settlement Footprint 2015, Marconcini et al. 2020)]-->C3
   C3[[Descarga de segmentos de capa re referencia de urbanización en 2015 y su conversión en numpy array: Colab ee]]-->E4
-  C4[[Descarga de segmentos de capa cuerpos de agua en 2015 y su conversión en numpy array: Colab ee]]-->E4
+  D05[(GLO-30: Global 30m Digital Elevation Model)]-->C4
+  C4[[Descarga de segmentos de capa cuerpos de agua WBM en 2015 y su conversión en numpy array: Colab ee]]-->C5
+  C5[[Unión y reetiquetado de variables por segmento según esquema de tres categorías]]-->C6
+  C6[[Union de numpy arrays de los segmentos variable categorica en array completo de referencia 2015: Colab numpy]]-->E4
   D01[(USGS Landsat 8 Level 2, Collection 2, Tier 1 LANDSAT_LC08_C02_T1_L2)]-->D1
-  D1[Selección de imagenes de satelite L5 y L8 para cada fecha de interés 2000, 2010, 2015, 2020]-->D2
-  D2{{Evaluación de disponibilidad y calidad de la imagen}}
-  D2--imagen con calidad suficiente disponible-->E1
-  D2--imagen con calidad suficiente no disponible-->D3
-  D3[/Cambio de fecha a una cercana/]-->D1
-  E1[[Descarga de segmentos de la imagen y su conversion en numpu array: Colab ee]]-->E2
-  E2[[union de numpy array de los segmentos en arrays completos: Colab numpy]]-->E3
-  E3[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5 y L8: Google Drive)]-->F1
+  D02[(USGS Landsat 5 Level 2, Collection 2, Tier 1 LANDSAT_LT05_C02_T1_L2)]-->D1
+  D03[(Harmonized Sentinel-2 MSI: MultiSpectral Instrument, Level-2A COPERNICUS_S2_SR_HARMONIZED)]-->D1
+  D1[Selección de imagenes de satelite L5 y L8 para fechas de interés en 2000, 2010, 2015, 2020]-->D2
+  D2{{Evaluación de calidad de la imagen}}
+  D2--imagen/pixel con calidad suficiente disponible-->E1
+  D2--imagen/pixel con calidad suficiente no disponible-->D3
+  D3[/Toma de imagen/pixel de fecha alternativa/]-->D1
+  E1[[Descarga de los segmentos de la imagen y su conversion en numpu array: Colab ee]]-->E2
+  E2[[Union de numpy arrays de los segmentos en array completo por fecha: Colab numpy]]-->E3
+  E3[[Exportación a Google Drive]]-->E3A
+  E3A[(Base de datos de numpy arrays de variables predictoras que corresponden a las bandas de imagenes L5, L8 y Sentinel 2: Google Drive)]-->F1
   E4[(Base de datos de numpy arrays de variables con etiquetas categoricas conocidas en 2015: Google Drive)]-->F1
   F1[Separación de subconjuntos de entranamiento, validación y control: Colab scipy]-->J1
   J1{{Verificación de prerequisitos para arranque de analisis ANN en determinada fecha}}-->K1
