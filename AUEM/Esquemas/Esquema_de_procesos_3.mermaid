@@ -28,7 +28,7 @@ flowchart TD
   Z8B-->END
   Z8C-->END
 
-  END([Estimación de mancha urbana de la zona concluida])
+  END([Evaluación de precisión de mancha urbana de la zona concluida])
 
   CLASS1[[Clasificcion banaria construido/no-construido: GEE]]-->CLASS2
   CLASS1-->CLASS3
@@ -37,6 +37,7 @@ flowchart TD
   CLASS3-->R1
   CLASS3-->CLASS5
   R1[(Capa de urbano-suburbano-rural)]
+  R1-->EXPORT
   CLASS4[[Identificar solo pixeles urbanos y suburbanos]]-->CLASS4A
   CLASS4A[[Calculo de maximos en un radio de capa binaria en radio 100 m]]-->CLASS5
   CLASS5[[Reclasificar pixeles urbanos-suburbanos-rurales-marginal]]-->CLASS6
@@ -48,3 +49,5 @@ flowchart TD
   CLASS10[[Rasterizar poligonos de espacio abierto etiquetado]]-->CLASS11
   CLASS11[[Reclasificar poligonos de espacio urbano y abierto en 7 categorias]]-->R2
   R2[(Capa de clasificacion urbano-suburbano-rural de 7 categorias)]
+  R2-->EXPORT
+  EXPORT[[Exportar capas en formato GeoTIFF en Google Drive]]
