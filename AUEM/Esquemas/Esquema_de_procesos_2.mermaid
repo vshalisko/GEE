@@ -45,14 +45,19 @@ flowchart TD
   MODEL1-->MODEL6
   MODEL2[[Prediccion con datos de control 2015]]-->MODEL3
   MODEL3[[Evaluación de modelo con datos de control 2015]]-->MODEL3A
-  MODEL3A[/Reporte modelo 2015 de ACC, AUC, TSS, Kappa, F1 por clase/]
+  MODEL3A[/Reporte modelo 2015 ACC, AUC, TSS, Kappa, F1 por clase/]
   MODEL4[[Prediccion con datos completos 2015]]-->MODEL5
   MODEL5[/Capa categorica para 2015 de espacio construido, espacio no-construido y agua/]-->Z1
   MODEL5-->MODEL8
   MODEL6[[predicción con datos 2020]]-->MODEL6A
   MODEL6A[/Capa categorica para 2020 de espacio construido, espacio no-construido y agua/]-->Z1
 
-  MODEL8[[Entrenamiento de modelos secundarios para datos de otro sensor]]-->MODEL9
+  MODEL8[[Seperacion de conjuntos de entrenameinto, control y validación para datos de otro sensor, analogo al proceso L8 2015]]-->MODEL8A
+  MODEL8A[[Entrenamiento de modelo secundario con datos de otro sensor]]-->MODEL8B
+  MODEL8B[[Proceso de validación ajuste de hiperparémetros y control]]-->MODEL8C
+  MODEL8B-->MODEL8D
+  MODEL8C[[Guardar el objeto de modelo secundario en Google Drive]]-->MODEL9
+  MODEL8D[/Reporte modelo secundario ACC, AUC, TSS, Kappa, F1 por clase/]
   MODEL9[[Prediccion con datos 2010]]-->MODEL9A
   MODEL9A[/Capa categorica para 2010 de espacio construido, espacio no-construido y agua/]-->Z1
   MODEL10[[Prediccion con datos 2000]]-->MODEL10A
@@ -60,7 +65,6 @@ flowchart TD
 
   Z1[[Guardar en Google Drive como numpy array: Colab numpy]]-->Z2
   Z2[[Exportar en Google Drive como GeoTIFF: Colab]]-->Z4
-  Z2-->Z4
   Z4[(Base de datos de numpy arrays y GeoTIFFs de espacio construido en 2000, 2010, 2015 y 2020)]-->END
 
   END([Estimación de mancha urbana de la zona concluida])
