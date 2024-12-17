@@ -3,6 +3,6 @@ SRC: EPSG:32611
 SRC nombre: UTM zone 11N / WGS84
 Centro GEE (x, y): 31.8680 N, 116.6064 O
 Centro SRC (x, y): 398363, 3528065
-Limites SRC (llx, urx, llx, urx): 531951, 547066, 3513217, 3532728
+Limites SRC (llx, urx, lly, ury): 531951, 547066, 3513217, 3532728
 
-
+Limites SRC nuevos (llx, urx, lly, ury): 523989, 547709, 3503560, 3532709 
