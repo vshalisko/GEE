@@ -9,4 +9,6 @@ Scripts para el taller 2024.
 6) Guardado de datos en GeoTIFF
 7) Revision de goerefferenciación y su ajuste (en su caso), puntos de referencia para ajuste de georefferenciación
 
-   
+#### Pendientes
+* Lograr que se guarda GeoTIFF multibanda al final del script de preprocesamiento
+* Corregir el error de georefferenciación en la coordenada x que surge en el script de preprocesamiento; tentativamente la origen del error se encuentra en la función de segmentación (segmentation)
