@@ -11,4 +11,5 @@ Scripts para el taller 2024.
 
 #### Pendientes
 * Lograr que se guarda GeoTIFF multibanda al final del script de preprocesamiento
-* Corregir el error de georefferenciación en la coordenada x que surge en el script de preprocesamiento; tentativamente la origen del error se encuentra en la función de segmentación (segmentation)
+* Se corregio error en segmentación que consistia en falta del ultimo segmento incompleto en la parte derecha
+* Falta corregir el error de georefferenciación en la coordenada x que surge en el script de preprocesamiento; tentativamente la origen del error se encuentra en el proceso de asignación de proyección o transformación para exportar en GeoTIFF
