@@ -10,6 +10,6 @@ Scripts para el taller 2024.
 7) Revision de goerefferenciación y su ajuste (en su caso), puntos de referencia para ajuste de georefferenciación
 
 #### Pendientes
-* Lograr que se guarda GeoTIFF multibanda al final del script de preprocesamiento
 * Se corregio error en segmentación que consistia en falta del ultimo segmento incompleto en la parte derecha
-* Falta corregir el error de georefferenciación en la coordenada x que surge en el script de preprocesamiento; tentativamente la origen del error se encuentra en el proceso de asignación de proyección o transformación para exportar en GeoTIFF
+* Lograr que se guarda GeoTIFF multibanda al final del script de preprocesamiento
+* Falta corregir el error de georefferenciación en la coordenada x que surge en el script de preprocesamiento; tentativamente la origen del error se encuentra en el proceso de asignación de proyección o transformación para exportar en GeoTIFF, en particular caso de Ensenada si en lugar de ancho de pixel 30 ponemos 29.5 se logra georefferenciacion casi perfecta; habra que determinar como surge esta diferencia
