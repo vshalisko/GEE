@@ -11,9 +11,11 @@ Scripts para el taller 2024.
 
 #### Avances
 * Se corregio error en segmentación que consistia en falta del ultimo segmento incompleto en la parte derecha
-* Se corregio el error de desfase general de georefferenciación en la coordenada x, estaba relacionado con diferencia entre el numero de pixeles esperado con tamaño de pixel definido y los pixeles que realmente salen del proceso de segmentación la diferencia es en orden de 2% y posiblemente se relaciona con inclusion de pixeles marginales en los segmentos
+* Se corregio el error de desfase general de georefferenciación en la coordenada x, estaba relacionado con diferencia entre el numero de pixeles esperado con tamaño de pixel definido y los pixeles que realmente salen del proceso de segmentación la diferencia es en orden de 2% en ancho de segmento
+* Se aplico la corrección de ancho de segmentos, eliminando la última columna y fila de pixeles en cada segmento, ya que se repiten en siguiente segmento, con esto se logro tener georefferenciación sin distorciones
+* Se guardan los GeoTIFFs de rasters monobanda y multibanda
 
 #### Pendientes
 
-* Lograr que se guarda GeoTIFF multibanda al final del script de preprocesamiento
+* Aplicar mismo proceso para los demás fechas y zonas
 
