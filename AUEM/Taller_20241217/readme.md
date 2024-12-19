@@ -1,4 +1,4 @@
-Scripts para el taller 2024.
+Scripts para el taller 2024.12.17
 
 ### Caso Ensenada
 1) Modificacióin del marco de estudio
