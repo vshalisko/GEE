@@ -9,6 +9,11 @@ Scripts para el taller 2024.
 6) Guardado de datos en GeoTIFF
 7) Revision de goerefferenciación y su ajuste (en su caso), puntos de referencia para ajuste de georefferenciación
 
+### Scripts
+1) ESE_visualizacion_zona_estudio.ipynb - solo visualización de rectangulo de recorte e imagen Landsat 8 elegido
+2) ESE_visualizacion_zona_estudio_con_reduccion_nubes.ipynb - visualización de rectangulo de recorte y producción de imagen combinado (mosaico) con nubes eliminados y cobertura completa
+3) ESE_preprocesamiento_zona_estudio_con_reduccion_nubes.ipynb - script final de la etapa de preprocesamiento que permite descarga de datos en forma de numpy array y GeoTIFF a Google Drive, con asignación de georefferenciación, aplicable al imagen de satelite 2015 y variables categoricas 2015 requeridos para el entrenamiento
+
 #### Avances
 * Se corregio error en segmentación que consistia en falta del ultimo segmento incompleto en la parte derecha
 * Se corregio el error de desfase general de georefferenciación en la coordenada x, estaba relacionado con diferencia entre el numero de pixeles esperado con tamaño de pixel definido y los pixeles que realmente salen del proceso de segmentación la diferencia es en orden de 2% en ancho de segmento
