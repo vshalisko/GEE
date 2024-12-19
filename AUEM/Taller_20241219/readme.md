@@ -3,7 +3,7 @@ Scripts para el taller 2024.12.19
 ### Caso Ensenada
 1) Iniciamos con datos de 2015 (feature: Landsat 8, target: categorico de 3 clases) en forma de Numpy arryas en Google Drive
 2) Descargamos datos 2020 para predicción y datos de 2014 como la fecha mas temprana de Landsat 8 disponible
-3) Transformación inicial de datos
+3) Transformación inicial de datos y normalización con StandardScaler
 4) Subdividir datos en subconuntos de entrenamiento (80%), validación (10%) y control (10%)
 5) Definir los hiperparámetros iniciales
 6) Entrenar el modelo ANN (Keras, Tensor Flow 3) con hiperparamentros iniciales (modelo M1)
