@@ -38,6 +38,7 @@ Nota 2: Para trabajar en una zona distinta de Ensenada debes introducir las modi
 * ESE_preprocesamiento_L8_tres_fechas.ipynb - sirve para descarga de datos 2014, 2015 y 2020 y su guardado en Google Drive (numpy arrays y GeoTIFF)
 * ESE_ANN_simple_L8.ipynb - script para general dos modelos ANN para 2015, evaluarlos y realizar predicción en 2015
 * ESE_ANN_simple_L8_con_2020.ipynb - lo mismo que anterior pero con prediccion en 2015, 2014 y 2020
+* ESE_ANN_simple_L8_con_2020_hiperparametros2.ipynb - versión más avanzada de script de ANN, con reacomodo de codigo para su mejor organización y definición de hiperparámetros a probar en la sección inicial del script; solo para modelos de dos capas internas
 
 ### Nota: 2 asistences presenciales del taller, 3 asistentes del taler que van a ver la grabación
 
