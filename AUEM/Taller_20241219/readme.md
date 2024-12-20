@@ -17,7 +17,7 @@ Scripts para el taller 2024.12.19
 14) Realizar predicción para 2014
 15) Guardar las capas de predicción en forma de Numpy arrays y GeoTIFF
 
-### Nota: asistences presenciales en Taller 2, asistentes del taler que van a ver la grabación 3
+### Nota: 2 asistences presenciales del taller, 3 asistentes del taler que van a ver la grabación
 
 ### Pendientes
 * Difinir el universi de hiperparámetros de ANN a evaluar (cantidad de épocas y tamaño de batch de entrenamiento, número de neuronas y capas internas, métricas de ajuste, funciones de activación, entre otros)
