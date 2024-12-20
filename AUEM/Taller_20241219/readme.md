@@ -1,9 +1,19 @@
 Scripts para el taller 2024.12.19
 
-### ¿Como trabajar en este taller?
-Si no sabes con que script comenzar o que hacer, el flujo de trabajo incluye dos scripts que debes configurar y correr en una secuancia para obtener los resultados completos:
+## ¿Como trabajar en este taller?
+Si no sabes con que script comenzar o que hacer, el flujo de trabajo incluye dos scripts que debes configurar y correr de manera consecutive para obtener los resultados completos:
 1) **Paso 1**. Configurar y ejecutar **ESE_preprocesamiento_L8_tres_fechas.ipynb** para descargar datos Landsat 8 y categoricos de referencia
 2) **Paso 2**. Configurar y ejecutar **ESE_ANN_simple_L8_con_2020.ipynb** para obtener predicciones de mancha urbana en 2015, 2014 y 2020
+Nota 1: No debes olvidar guardar los scripts en tu Google Drive y en tu propio repositorio GitHub cada vez que los modificas, no se guardan de forma automática
+Nota 2: Para trabajar en una zona distinta de Ensenada debes introducir las modificaciones correspondientes en la sección de definición de variables de cada script, y cambiar el nombre de script.
+
+## Asignación de tareas (trabajo por realizar en casa) para llegar preparados al taller en principios de enero 2025:
+* Ensenada - ya quedo en este taller
+* Puerto Vallarta - tarea para todos
+* Ocotlan - tarea para todos
+* Chapala - tarea para todos
+* Mérida - Shalisko
+* Guadalajara - queda pendiente para enero
 
 
 ### Caso Ensenada
@@ -37,10 +47,4 @@ Si no sabes con que script comenzar o que hacer, el flujo de trabajo incluye dos
 * Entrenar modelos con datos de Landsat 5 2011 y target obtenido a partir de predicción en 2014
 * Generar predicciones actualizados para 2000 y 2010 con modelo entrenado con datos Landsat 5
 
-### Asignación de tareas:
-* Guadalajara - pendiente para enero
-* Mérida - Shalisko
-* Puerto Vallarta - todos
-* Ensenada - ya quedo
-* Ocotlan - todos
-* Chapala - todos
+
