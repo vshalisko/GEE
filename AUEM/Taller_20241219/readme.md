@@ -17,6 +17,10 @@ Scripts para el taller 2024.12.19
 14) Realizar predicción para 2014
 15) Guardar las capas de predicción en forma de Numpy arrays y GeoTIFF
 
+### Scripts
+1) ESE_preprocesamiento_L8_tres_fechas.ipynb - sirve para descarga de datos 2014, 2015 y 2020 y su guardado en Google Drive (numpy arrays y GeoTIFF)
+2) ESE_ANN_simple_L8.ipynb - script para general el modelo ANN para 2015 y predicción en 2015
+
 ### Nota: 2 asistences presenciales del taller, 3 asistentes del taler que van a ver la grabación
 
 ### Pendientes
