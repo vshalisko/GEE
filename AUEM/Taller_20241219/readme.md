@@ -1,5 +1,11 @@
 Scripts para el taller 2024.12.19
 
+### ¿Como trabajar en este taller?
+Si no sabes con que script comenzar o que hacer, el flujo de trabajo incluye dos scripts que debes configurar y correr en una secuancia para obtener los resultados completos:
+1) **Paso 1**. Configurar y ejecutar **ESE_preprocesamiento_L8_tres_fechas.ipynb** para descargar datos Landsat 8 y categoricos de referencia
+2) **Paso 2**. Configurar y ejecutar **ESE_ANN_simple_L8_con_2020.ipynb** para obtener predicciones de mancha urbana en 2015, 2014 y 2020
+
+
 ### Caso Ensenada
 1) Iniciamos con datos de 2015 (feature: Landsat 8, target: categorico de 3 clases) en forma de Numpy arryas en Google Drive
 2) Descargamos datos 2020 para predicción y datos de 2014 como la fecha mas temprana de Landsat 8 disponible
@@ -17,12 +23,7 @@ Scripts para el taller 2024.12.19
 14) Realizar predicción para 2014
 15) Guardar las capas de predicción en forma de Numpy arrays y GeoTIFF
 
-### ¿Como trabajar en este proyecto?
-Sin no sabes con que script comenzar, el flujo de trabajo incluye dos scripts que debes configurar y correr en una secuancia:
-1) **Paso 1**. Configurar y ejecutar **ESE_preprocesamiento_L8_tres_fechas.ipynb** para descargar datos landsat y de referencia
-2) **Paso 2**. Configurar y ejecutar **ESE_ANN_simple_L8_con_2020.ipynb** para obtener predicciones de mancha urbana en 2015, 2014 y 2020
-
-### Scripts
+### Descripción de los scripts
 * ESE_preprocesamiento_L8_tres_fechas.ipynb - sirve para descarga de datos 2014, 2015 y 2020 y su guardado en Google Drive (numpy arrays y GeoTIFF)
 * ESE_ANN_simple_L8.ipynb - script para general dos modelos ANN para 2015, evaluarlos y realizar predicción en 2015
 * ESE_ANN_simple_L8_con_2020.ipynb - lo mismo que anterior pero con prediccion en 2015, 2014 y 2020
