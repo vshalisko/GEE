@@ -6,7 +6,7 @@ Scripts para el taller 2024.12.19
 3) Transformación inicial de datos y normalización con StandardScaler
 4) Subdividir datos en subconuntos de entrenamiento (80%), validación (10%) y control (10%)
 5) Definir los hiperparámetros iniciales
-6) Entrenar el modelo ANN (Keras, Tensor Flow 3) con hiperparamentros iniciales (modelo M1)
+6) Entrenar el modelo ANN (Keras, Tensor Flow 2) con hiperparamentros iniciales (modelo M1)
 7) Realizar calculo de las estadisticas de validación de M1
 8) Entrenar el modelo ANN con hiperparamentros alternativos (modelo M2)
 9) Realizar calculo de las estadisticas de validación de M2
