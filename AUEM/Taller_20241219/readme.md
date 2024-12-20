@@ -4,6 +4,7 @@ Scripts para el taller 2024.12.19
 Si no sabes con que script comenzar o que hacer, el flujo de trabajo incluye dos scripts que debes configurar y correr de manera consecutive para obtener los resultados completos:
 1) **Paso 1**. Configurar y ejecutar **ESE_preprocesamiento_L8_tres_fechas.ipynb** para descargar datos Landsat 8 y categoricos de referencia
 2) **Paso 2**. Configurar y ejecutar **ESE_ANN_simple_L8_con_2020.ipynb** para obtener predicciones de mancha urbana en 2015, 2014 y 2020
+
 Nota 1: No debes olvidar guardar los scripts en tu Google Drive y en tu propio repositorio GitHub cada vez que los modificas, no se guardan de forma automática
 Nota 2: Para trabajar en una zona distinta de Ensenada debes introducir las modificaciones correspondientes en la sección de definición de variables de cada script, y cambiar el nombre de script.
 
