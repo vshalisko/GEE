@@ -109,3 +109,18 @@ Map.addLayer(urbano_dens, {
       max: 500,
       palette: ['white', 'red']
 }, 'U dens, pers/ha', false, 1);
+
+
+var projection = raster_3_class.projection().getInfo();
+print(projection);
+print(projection.crs);
+
+Export.image.toDrive({
+  image: urbano_dens,
+  description: 'ENS_2020_densidad',
+  folder: "Colab Data Angel",
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  scale: 30,
+  region: raster_3_class.geometry()
+});
