@@ -17,7 +17,7 @@ Map.addLayer(raster_3_class, {
         min: 0,
         max: 2,
         palette: ['lightgray', 'blue', 'gray']
-  }, '3 class', false, 1);
+  }, '3 class', true, 1);
 
 // Realizar clasificación binaria
 // aplicar el umbral de clasificacion
@@ -61,18 +61,20 @@ var calculateDensity = function(feature) {
     })
  
     var result = ee.Dictionary(classAreaLists.flatten())
-    var area_ageb = ee.Number(result.get('1',0)).add(ee.Number(result.get('0',0)))
-    var urbano_p = ee.Number(result.get('1',0)).divide(area_ageb)
     var cvegeo = feature.get('CVEGEO')
     var pobtot = feature.get('csPOBTOT')
-    var dens = ee.Number(pobtot).divide(ee.Number(result.get('1',0))).multiply(1e4)
+    var area_ageb = ee.Number(result.get('1',0)).add(ee.Number(result.get('0',0)))
+    var urbano_p = ee.Number(result.get('1',0)).divide(area_ageb)
+    var dens_ageb = ee.Number(pobtot).divide(area_ageb).multiply(1e4)
+    var dens_pixel = ee.Number(pobtot).divide(ee.Number(result.get('1',0))).multiply(1e4)
     return ee.Feature(
       feature.geometry(),
       result.set('CVEGEO', cvegeo)
             .set('POBTOT', pobtot)
             .set('area_ageb', area_ageb)
             .set('urbano_p', urbano_p)
-            .set('densidad', dens)
+            .set('densidad_ageb', dens_ageb)
+            .set('densidad', dens_pixel)
             )
 }
  
@@ -83,33 +85,45 @@ print(densidad_ageb);
 //// Vectorial de agebs
 Map.addLayer(densidad_ageb, {}, 'AGEBs', false, 1)
 
-var densidad_ageb_raster = densidad_ageb.reduceToImage({
+var densidad_pixel_raster = densidad_ageb.reduceToImage({
     properties: ['densidad'],
     reducer: ee.Reducer.first()
 });
 
-//// Densidad por AGEB recalculada
+var densidad_ageb_raster = densidad_ageb.reduceToImage({
+    properties: ['densidad_ageb'],
+    reducer: ee.Reducer.first()
+});
+
+//// Densidad por AGEB
 Map.addLayer(densidad_ageb_raster, {
       min: 0, 
-      max: 500,
+      max: 300,
       palette: ['white', 'red']
 }, 'AGEBs, pers/ha', false, 1);
 
-var urbano_dens = urbano_bin.multiply(densidad_ageb_raster);
 
-//var mask_urbano_dens = urbano_dens.lte(0);
-//var urbano_dens_masked = urbano_dens.updateMask(mask_urbano_dens)
-var urbano_dens = urbano_dens.unmask(0);
+var urbano_dens = urbano_bin.multiply(densidad_pixel_raster);
+
+var mask_urbano_dens = urbano_bin.gt(0);
+var urbano_dens_masked = urbano_dens.updateMask(mask_urbano_dens)
+var urbano_dens = urbano_dens_masked.unmask(0);
 
 print(urbano_dens);
 
-//// Densidad por pixel
+//// Densidad por pixel sin mascara de construido
 Map.addLayer(urbano_dens, {
       min: 0, 
-      max: 500,
+      max: 300,
       palette: ['white', 'red']
 }, 'U dens, pers/ha', false, 1);
 
+//// Densidad por pixel con mascara de construido
+Map.addLayer(urbano_dens_masked, {
+      min: 0, 
+      max: 300,
+      palette: ['white', 'red']
+}, 'Um dens, pers/ha', true, 1);
 
 var projection = raster_3_class.projection().getInfo();
 print(projection);
