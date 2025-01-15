@@ -1,7 +1,12 @@
-//// Calculo de densidad de poblacion por poligonos y representacion
-//// en pixeles de espacio construido
+//// Script GEE para calculo de densidad de poblacion por poligonos 
+//// y representacion en pixeles de espacio construido
+//// Insumos: 1) los polígonos de áreas geoestadisticos de la sitius urbanizados
+//// (Puede ser AGEBs o manzanas), los poligonos cuentan con datos del censo de población
+//// 2) El raster del espacio construido (builtup)
+//// Los valores de densidad de población (habitantes por ha) se recalculan para zonas 
+//// (pixeles) con presencia del espacio construido
 
-//// Inspirado en https://spatialthoughts.com/2020/06/19/calculating-area-gee/
+//// Código inspirado en https://spatialthoughts.com/2020/06/19/calculating-area-gee/
 
 // cargar GeoTIFF de espacio construido previamente colocado en Assets
 var raster_3_class = ee.Image("projects/ee-viacheslavs/assets/ESE_2020_prediccion_new");
