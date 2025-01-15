@@ -9,6 +9,8 @@
 //// Código inspirado en https://spatialthoughts.com/2020/06/19/calculating-area-gee/
 
 // cargar GeoTIFF de espacio construido previamente colocado en Assets
+// raster debe contener una banda llamada b1 con variable categorica de tres
+// clases: 0 - sin construir, 1 - agua, 2- construido
 var raster_3_class = ee.Image("projects/ee-viacheslavs/assets/ESE_2020_prediccion_new");
 print(raster_3_class);
 Map.addLayer(raster_3_class, {
