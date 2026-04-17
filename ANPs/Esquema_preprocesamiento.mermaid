@@ -37,13 +37,15 @@ flowchart TD
     Capas2010@{ shape: docs, label: Predictores 2010}
     Capas2020@{ shape: docs, label: Predictores 2020}
 
+    PCA2020@{ shape: hex, label: "PCA"}
+
     gee1---|selección|Landsat8
     gee1---|selección|Landsat7
     gee1---|selección|Landsat5
     gee1---|selección|Sentinel2
     gee1---MDE
 
-    subgraph main
+    subgraph preprocesamiento
         Landsat8-->INS
         Landsat7-->INS
         Landsat5-->INS
@@ -67,7 +69,7 @@ flowchart TD
     Combinacion2---->BSecas2020
     Combinacion2---->BLluvias2020
 
-    subgraph b2000
+    subgraph 2000
         BSecas2000-->IndVeg2000
         BLluvias2000-->Tass2000
         IndVeg2000-->Comb2000
@@ -75,7 +77,7 @@ flowchart TD
         Comb2000-->Capas2000
     end
 
-    subgraph b2010
+    subgraph 2010
         BSecas2010-->IndVeg2010
         BLluvias2010-->Tass2010
         IndVeg2010-->Comb2010
@@ -83,13 +85,15 @@ flowchart TD
         Comb2010-->Capas2010
     end
 
-    subgraph b2020
+    subgraph 2020
         BSecas2020-->IndVeg2020
         BLluvias2020-->Tass2020
         IndVeg2020-->Comb2020
         Tass2020-->Comb2020
         Comb2020-->Capas2020
+        Capas2020---->PCA2020
     end
 
+    
     
     
