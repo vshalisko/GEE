@@ -22,7 +22,21 @@ flowchart TD
     BSecas2020@{ shape: docs, label: 2020 Secas}
     BLluvias2020@{ shape: docs, label: 2020 Lluvias}
 
+    IndVeg2000@{ shape: procs, label: "NDVI e indices"}
+    IndVeg2010@{ shape: procs, label: "NDVI e indices"}
+    IndVeg2010@{ shape: procs, label: "NDVI e indices"}
+    Tass2000@{ shape: procs, label: "Tasseled Cap"}
+    Tass2010@{ shape: procs, label: "Tasseled Cap"}
+    Tass2010@{ shape: procs, label: "Tasseled Cap"}
 
+    Capas2000@{ shape: docs, label: Predictores 2000}
+    Capas2010@{ shape: docs, label: Predictores 2010}
+    Capas2020@{ shape: docs, label: Predictores 2020}
+
+    Comb2000@{ shape: cross-circ, label: "Combinación" }
+    Comb2010@{ shape: cross-circ, label: "Combinación" }
+    Comb2020@{ shape: cross-circ, label: "Combinación" }
+    
     gee1---|selección|Landsat8
     gee1---|selección|Landsat7
     gee1---|selección|Landsat5
@@ -53,4 +67,18 @@ flowchart TD
     Combinacion2---->BSecas2020
     Combinacion2---->BLluvias2020
 
+    BSecas2000-->IndVeg2000
+    BLluvias2000-->Tass2000
+    BSecas2010-->IndVeg2010
+    BLluvias2010-->Tass2010
+    BSecas2020-->IndVeg2020
+    BLluvias2020-->Tass2020
+
+    IndVeg2000-->Comb2000
+    Tass2000-->Comb2000
+    IndVeg2010-->Comb2010
+    Tass2010-->Comb2010
+    IndVeg2020-->Comb2020
+    Tass2020-->Comb2020
+    
     
