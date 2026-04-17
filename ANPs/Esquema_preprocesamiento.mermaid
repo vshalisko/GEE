@@ -12,10 +12,10 @@ flowchart TD
     INS@{ shape: procs, label: "Identificación de nubes y sombras"}
     MNS@{ shape: docs, label: "Mascaras de nubes y sombras"}
     NT@{ shape: procs, label: "Normalización topográfica"}
-    Combinacion@{ shape: hex, label: "Promedios de bandas por fecha y periodo del año aplicando mascaras" }
+    Combinacion@{ shape: hex, label: "Promedios de bandas por fecha y periodo del año" }
 
-    BSecas{ shape: docs, label: Raster stack Secas}
-    BLluvias{ shape: docs, label: Raster stack Lluvias}
+    BSecas@{ shape: docs, label: Raster stack Secas}
+    BLluvias@{ shape: docs, label: Raster stack Lluvias}
 
     gee1---|selección|Landsat8
     gee1---|selección|Landsat7
@@ -24,9 +24,9 @@ flowchart TD
     gee1---MDE
 
     subgraph main
-        Landsat8-->INS
-        Landsat7-->INS
-        Landsat5-->INS
+        Landsat8---|recorte mascaras|>INS
+        Landsat7---|recorte mascaras|>INS
+        Landsat5---|recorte mascaras|>INS
 
         MDE-->NT
         Landsat8-->NT
