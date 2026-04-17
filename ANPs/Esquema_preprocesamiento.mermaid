@@ -12,7 +12,8 @@ flowchart TD
     INS@{ shape: procs, label: "Identificación de nubes y sombras"}
     MNS@{ shape: docs, label: "Mascaras de nubes y sombras"}
     NT@{ shape: procs, label: "Normalización topográfica"}
-    Combinacion@{ shape: hex, label: "Promedios de bandas por fecha y periodo del año" }
+    Combinacion1@{ shape: hex, label: "Recorte nubes y combinación" }
+    Combinacion2@{ shape: hex, label: "Promedios de bandas" }
 
     BSecas@{ shape: docs, label: Raster stack Secas}
     BLluvias@{ shape: docs, label: Raster stack Lluvias}
@@ -33,10 +34,12 @@ flowchart TD
         Landsat7-->NT
         Landsat5-->NT
 
-        INS-- recorte -->MNS
-        NT-->Combinacion
-        MNS-->Combinacion
+        INS-->MNS
+        NT-->Combinacion1
+        MNS-->Combinacion1
+        Combinacion1-->Combinacion2
+        Combinacion2-->Combinacion1
     end
 
-    Combinacion-->BSecas
-    Combinacion-->BLluvias
+    Combinacion2-->BSecas
+    Combinacion2-->BLluvias
