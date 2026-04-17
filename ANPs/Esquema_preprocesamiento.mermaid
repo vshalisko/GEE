@@ -38,6 +38,14 @@ flowchart TD
     Capas2020@{ shape: docs, label: Predictores 2020}
 
     PCA2020@{ shape: hex, label: "PCA"}
+    TL2000@{ shape: hex, label: "Transf. lineal"}
+    TL2010@{ shape: hex, label: "Transf. lineal"}
+
+    CapasPCA2000@{ shape: docs, label: PC 2000}
+    CapasPCA2010@{ shape: docs, label: PC 2010}
+    CapasPCA2020@{ shape: docs, label: PC 2020}
+
+    Eigenvectors@{ shape: win-pane, label: "Matriz Eigenvectors" }
 
     gee1---|selección|Landsat8
     gee1---|selección|Landsat7
@@ -58,7 +66,7 @@ flowchart TD
         INS-->MNS
         NT-->Combinacion1
         MNS-->Combinacion1
-        Combinacion1---Combinacion2
+        Combinacion1---|promedios|Combinacion2
         
     end
 
@@ -75,6 +83,8 @@ flowchart TD
         IndVeg2000-->Comb2000
         Tass2000-->Comb2000
         Comb2000-->Capas2000
+        Capas2000-->TL2000
+        TL2000-->CapasPCA2000
     end
 
     subgraph 2010
@@ -83,6 +93,8 @@ flowchart TD
         IndVeg2010-->Comb2010
         Tass2010-->Comb2010
         Comb2010-->Capas2010
+        Capas2010-->TL2010
+        TL2010-->CapasPCA2010
     end
 
     subgraph 2020
@@ -92,8 +104,13 @@ flowchart TD
         Tass2020-->Comb2020
         Comb2020-->Capas2020
         Capas2020---->PCA2020
+        PCA2020-->CapasPCA2020
     end
 
+    PCA2020---->Eigenvectors
+    Eigenvectors---->TL2000
+    Eigenvectors---->TL2010
+    
     
     
     
