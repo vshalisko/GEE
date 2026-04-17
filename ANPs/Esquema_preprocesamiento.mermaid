@@ -15,8 +15,13 @@ flowchart TD
     Combinacion1@{ shape: hex, label: "Recorte y combinación" }
     Combinacion2@{ shape: hex, label: "Promedios de bandas" }
 
-    BSecas@{ shape: docs, label: Raster stack Secas}
-    BLluvias@{ shape: docs, label: Raster stack Lluvias}
+    BSecas2000@{ shape: docs, label: 2000 Secas}
+    BLluvias2000@{ shape: docs, label: 2000 Lluvias}
+    BSecas2010@{ shape: docs, label: 2010 Secas}
+    BLluvias2010@{ shape: docs, label: 2010 Lluvias}
+    BSecas2020@{ shape: docs, label: 2020 Secas}
+    BLluvias2020@{ shape: docs, label: 2020 Lluvias}
+
 
     gee1---|selección|Landsat8
     gee1---|selección|Landsat7
@@ -41,5 +46,11 @@ flowchart TD
         
     end
 
-    Combinacion2-->BSecas
-    Combinacion2-->BLluvias
+    Combinacion2---->BSecas2000
+    Combinacion2---->BLluvias2000
+    Combinacion2---->BSecas2010
+    Combinacion2---->BLluvias2010
+    Combinacion2---->BSecas2020
+    Combinacion2---->BLluvias2020
+
+    
