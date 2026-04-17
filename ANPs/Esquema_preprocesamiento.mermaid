@@ -24,16 +24,16 @@ flowchart TD
     gee1---MDE
 
     subgraph main
-        Landsat8---|recorte mascaras|>INS
-        Landsat7---|recorte mascaras|>INS
-        Landsat5---|recorte mascaras|>INS
+        Landsat8-->INS
+        Landsat7-->INS
+        Landsat5-->INS
 
         MDE-->NT
         Landsat8-->NT
         Landsat7-->NT
         Landsat5-->NT
 
-        INS-->MNS
+        INS-- recorte -->MNS
         NT-->Combinacion
         MNS-->Combinacion
     end
