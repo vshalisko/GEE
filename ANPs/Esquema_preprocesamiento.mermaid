@@ -12,7 +12,7 @@ flowchart TD
     INS@{ shape: procs, label: "Identificación de nubes y sombras"}
     MNS@{ shape: docs, label: "Mascaras de nubes y sombras"}
     NT@{ shape: procs, label: "Normalización topográfica"}
-    Combinacion1@{ shape: hex, label: "Recorte nubes y combinación" }
+    Combinacion1@{ shape: hex, label: "Recorte y combinación" }
     Combinacion2@{ shape: hex, label: "Promedios de bandas" }
 
     BSecas@{ shape: docs, label: Raster stack Secas}
@@ -37,8 +37,8 @@ flowchart TD
         INS-->MNS
         NT-->Combinacion1
         MNS-->Combinacion1
-        Combinacion1-->Combinacion2
-        Combinacion2-->Combinacion1
+        Combinacion1---Combinacion2
+        
     end
 
     Combinacion2-->BSecas
