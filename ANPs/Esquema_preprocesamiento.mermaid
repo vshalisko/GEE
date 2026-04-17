@@ -13,7 +13,7 @@ flowchart TD
     MNS@{ shape: docs, label: "Mascaras de nubes y sombras"}
     NT@{ shape: procs, label: "Normalización topográfica"}
     Combinacion1@{ shape: hex, label: "Recorte y combinación" }
-    Combinacion2@{ shape: hex, label: "Promedios de bandas" }
+    Combinacion2@{ shape: cross-circ, label: "Promedios de bandas" }
 
     BSecas2000@{ shape: docs, label: 2000 Secas}
     BLluvias2000@{ shape: docs, label: 2000 Lluvias}
@@ -29,14 +29,14 @@ flowchart TD
     Tass2010@{ shape: procs, label: "Tasseled Cap"}
     Tass2010@{ shape: procs, label: "Tasseled Cap"}
 
+    Comb2000@{ shape: cross-circ, label: "Combinación" }
+    Comb2010@{ shape: cross-circ, label: "Combinación" }
+    Comb2020@{ shape: cross-circ, label: "Combinación" }
+
     Capas2000@{ shape: docs, label: Predictores 2000}
     Capas2010@{ shape: docs, label: Predictores 2010}
     Capas2020@{ shape: docs, label: Predictores 2020}
 
-    Comb2000@{ shape: cross-circ, label: "Combinación" }
-    Comb2010@{ shape: cross-circ, label: "Combinación" }
-    Comb2020@{ shape: cross-circ, label: "Combinación" }
-    
     gee1---|selección|Landsat8
     gee1---|selección|Landsat7
     gee1---|selección|Landsat5
@@ -67,18 +67,29 @@ flowchart TD
     Combinacion2---->BSecas2020
     Combinacion2---->BLluvias2020
 
-    BSecas2000-->IndVeg2000
-    BLluvias2000-->Tass2000
-    BSecas2010-->IndVeg2010
-    BLluvias2010-->Tass2010
-    BSecas2020-->IndVeg2020
-    BLluvias2020-->Tass2020
+    subgraph b2000
+        BSecas2000-->IndVeg2000
+        BLluvias2000-->Tass2000
+        IndVeg2000-->Comb2000
+        Tass2000-->Comb2000
+        Comb2000-->Capas2000
+    end
 
-    IndVeg2000-->Comb2000
-    Tass2000-->Comb2000
-    IndVeg2010-->Comb2010
-    Tass2010-->Comb2010
-    IndVeg2020-->Comb2020
-    Tass2020-->Comb2020
+    subgraph b2010
+        BSecas2010-->IndVeg2010
+        BLluvias2010-->Tass2010
+        IndVeg2010-->Comb2010
+        Tass2010-->Comb2010
+        Comb2010-->Capas2010
+    end
+
+    subgraph b2020
+        BSecas2020-->IndVeg2020
+        BLluvias2020-->Tass2020
+        IndVeg2020-->Comb2020
+        Tass2020-->Comb2020
+        Comb2020-->Capas2020
+    end
+
     
     
