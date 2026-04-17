@@ -21,15 +21,17 @@ flowchart TD
     gee1---|selección|Sentinel2
     gee1---MDE
 
-    Landsat8-->INS
-    Landsat7-->INS
-    Landsat5-->INS
+    subgraph main
+        Landsat8-->INS
+        Landsat7-->INS
+        Landsat5-->INS
 
-    MDE-->NT
-    Landsat8-->NT
-    Landsat7-->NT
-    Landsat5-->NT
+        MDE-->NT
+        Landsat8-->NT
+        Landsat7-->NT
+        Landsat5-->NT
 
-    INS-->MNS
-    NT-->Combinacion
-    MNS-->Combinacion
+        INS-->MNS
+        NT-->Combinacion
+        MNS-->Combinacion
+    end
