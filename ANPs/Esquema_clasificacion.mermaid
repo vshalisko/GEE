@@ -1,0 +1,23 @@
+---
+title: Esquema de clasificación para detección de cambios (bosque)
+---
+flowchart TD
+    PC2000@{ shape: docs, label: PC2000}
+    PC2010@{ shape: docs, label: PC2010}
+    PC2020@{ shape: docs, label: PC2020}
+    Ref2020@{ shape: doc, label: Referencia2020}
+    Muestreo@{ shape: proc, label: Muestreo}
+    Subset@{ shape: hex, label: Subdivision}
+    Train2020@{ shape: doc, label: Conjunto entrenamiento}
+    Test2020@{ shape: doc, label: Conjunto control}
+    Valid2020@{ shape: doc, label: Conjunto validación}
+
+    PC2020 --> Muestreo
+    Ref2020 --> Muestreo
+    Muestreo --> Subset
+    Subset --70%--> Train2020
+    Subset --15%--> Test2020
+    Subset --15%--> Valid2020
+
+    
+    
