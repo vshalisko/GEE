@@ -15,8 +15,8 @@ flowchart TD
     Hiperparam@{ shape: win-pane, label: Hiperparámetros}
     TrainSVM@{ shape: proc, label: Entrenamiento SVM}
     TrainANN@{ shape: proc, label: Entrenamiento ANN}
-    ModeloSVM@{ shape: hex, label: Modelo SVM}
-    ModeloANN@{ shape: hex, label: Modelo ANN}
+    ModeloSVM@{ shape: double-circle, label: Modelo SVM}
+    ModeloANN@{ shape: double-circle, label: Modelo ANN}
     ControlSVM@{ shape: proc, label: Evaluación SVM}
     ControlANN@{ shape: proc, label: Evaluación ANN}
 
@@ -34,8 +34,8 @@ flowchart TD
     TrainANN --> ModeloANN
     ModeloSVM --> ControlSVM
     ModeloANN --> ControlANN
-    Control2020 --> ControlSVM
-    Control2020 --> ControlANN
+    Test2020 --> ControlSVM
+    Test2020 --> ControlANN
 
 
     
