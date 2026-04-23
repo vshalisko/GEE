@@ -57,6 +57,7 @@ flowchart TD
     gee1---|selección|Landsat5
     gee1---|selección|Sentinel2
     gee1---MDE
+    MDE-->NT
 
     subgraph preprocesamiento
         Landsat8==>NT
@@ -68,11 +69,9 @@ flowchart TD
         Landsat7---->INS
         Landsat5---->INS
 
-        MDE-->NT
         INS-->MNS
         MNS-->Combinacion1
         Combinacion1===|promedios|Combinacion2
-        
     end
 
     Combinacion2====>BSecas2000
