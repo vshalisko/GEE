@@ -60,15 +60,15 @@ flowchart TD
 
     subgraph preprocesamiento
         subgraph Landsat
-            Landsat8==>INS
-            Landsat7==>INS
-            Landsat5==>INS
             Landsat8==>NT
             Landsat7==>NT
             Landsat5==>NT
             NT==>Combinacion1
         end
 
+        Landsat8---->INS
+        Landsat7---->INS
+        Landsat5---->INS
         MDE-->NT
         INS-->MNS
         MNS-->Combinacion1
