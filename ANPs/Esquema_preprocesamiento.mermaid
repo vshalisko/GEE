@@ -121,13 +121,15 @@ flowchart TD
         PCA2020-->CapasPCA2020
     end
 
-    Est2020---->Estadisticas
-    Estadisticas---->Est2000
-    Estadisticas---->Est2010
+    subgraph estandarizacion
+        Est2020---->Estadisticas
+        Estadisticas---->Est2000
+        Estadisticas---->Est2010
 
-    PCA2020---->Eigenvectors
-    Eigenvectors---->TL2000
-    Eigenvectors---->TL2010
+        PCA2020---->Eigenvectors
+        Eigenvectors---->TL2000
+        Eigenvectors---->TL2010
+    end
     
     
     
