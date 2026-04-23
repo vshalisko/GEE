@@ -8,9 +8,18 @@ flowchart TD
     Ref2020@{ shape: doc, label: Referencia2020}
     Muestreo@{ shape: proc, label: Muestreo}
     Subset@{ shape: hex, label: Subdivision}
-    Train2020@{ shape: doc, label: Conjunto entrenamiento}
-    Test2020@{ shape: doc, label: Conjunto control}
-    Valid2020@{ shape: doc, label: Conjunto validación}
+    Train2020@{ shape: win-pane, label: Conjunto entrenamiento}
+    Test2020@{ shape: win-pane, label: Conjunto control}
+    Valid2020@{ shape: win-pane, label: Conjunto validación}
+
+    Hiperparam@{ shape: win-pane, label: Hiperparámetros}
+    TrainSVM@{ shape: proc, label: Entrenamiento SVM}
+    TrainANN@{ shape: proc, label: Entrenamiento ANN}
+    ModeloSVM@{ shape: hex, label: Modelo SVM}
+    ModeloANN@{ shape: hex, label: Modelo ANN}
+    ControlSVM@{ shape: proc, label: Evaluación SVM}
+    ControlANN@{ shape: proc, label: Evaluación ANN}
+
 
     PC2020 --> Muestreo
     Ref2020 --> Muestreo
@@ -18,6 +27,16 @@ flowchart TD
     Subset --70%--> Train2020
     Subset --15%--> Test2020
     Subset --15%--> Valid2020
+
+    Train2020 --> TrainSVM
+    Train2020 --> TrainANN
+    TrainSVM --> ModeloSVM
+    TrainANN --> ModeloANN
+    ModeloSVM --> ControlSVM
+    ModeloANN --> ControlANN
+    Control2020 --> ControlSVM
+    Control2020 --> ControlANN
+
 
     
     
