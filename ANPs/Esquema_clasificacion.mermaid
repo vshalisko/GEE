@@ -17,9 +17,15 @@ flowchart TD
     TrainANN@{ shape: proc, label: Entrenamiento ANN}
     ModeloSVM@{ shape: double-circle, label: Modelo SVM}
     ModeloANN@{ shape: double-circle, label: Modelo ANN}
+    ModeloSVMok@{ shape: double-circle, label: Modelo SVM ajustado}
+    ModeloANNok@{ shape: double-circle, label: Modelo ANN ajustado}
+    ValidSVM@{ shape: proc, label: Validación SVM}
+    ValidANN@{ shape: proc, label: Validación ANN}
+    OptimoSVM@{ shape: diam, label: SVM optimo?}
+    OptimoANN@{ shape: diam, label: ANN optimo?}
     ControlSVM@{ shape: proc, label: Evaluación SVM}
     ControlANN@{ shape: proc, label: Evaluación ANN}
-
+    AjusteHyp@{ shape: proc, label: Ajuste Hyperp.}
 
     PC2020 --> Muestreo
     Ref2020 --> Muestreo
@@ -28,14 +34,28 @@ flowchart TD
     Subset --15%--> Test2020
     Subset --15%--> Valid2020
 
+    Hiperparam ----> TrainSVM
+    Hiperparam ----> TrainANN
     Train2020 --> TrainSVM
     Train2020 --> TrainANN
     TrainSVM --> ModeloSVM
     TrainANN --> ModeloANN
-    ModeloSVM --> ControlSVM
-    ModeloANN --> ControlANN
+    ModeloSVM --> ValidSVM
+    ModeloANN --> ValidANN
+    Valid2020 --> ValidSVM
+    Valid2020 --> ValidANN
+    ValidSVM --> OptimSVM
+    ValidANN --> OptimANN
+    OptimSVM --si--> ModeloSVMok
+    OptimANN --si--> ModeloANNok
+    OptimSVM --no--> AjusteHyp
+    OptimANN --no--> AjusteHyp
+    AjusteHyp ----> Hyperparam
+    ModeloSVMok --> ControlSVM
+    ModeloANNok --> ControlANN
     Test2020 --> ControlSVM
     Test2020 --> ControlANN
+    
 
 
     
