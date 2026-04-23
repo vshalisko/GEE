@@ -49,6 +49,7 @@ flowchart TD
     CapasPCA2010@{ shape: docs, label: "PC 2010"}
     CapasPCA2020@{ shape: docs, label: "PC 2020"}
 
+    Estadisticas@{ shape: win-pane, label: "Estadistica descriptiva" }
     Eigenvectors@{ shape: win-pane, label: "Matriz Eigenvectores" }
 
     gee1---|selección|Landsat8
@@ -119,6 +120,10 @@ flowchart TD
         Capas2020---->PCA2020
         PCA2020-->CapasPCA2020
     end
+
+    Est2020---->Estadisticas
+    Estadisticas---->Est2000
+    Estadisticas---->Est2010
 
     PCA2020---->Eigenvectors
     Eigenvectors---->TL2000
