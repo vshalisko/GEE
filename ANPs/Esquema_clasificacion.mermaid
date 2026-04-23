@@ -81,15 +81,18 @@ flowchart TD
     ControlANN ----> Comparativa
     ControlSVM ----> Comparativa
     Comparativa --> ModeloOptimo
-    ModeloOptimo --> Clasif2020
-    ModeloOptimo --> Clasif2010
-    ModeloOptimo --> Clasif2000
-    PC2020 --> Clasif2020
-    PC2010 --> Clasif2010
-    PC2000 --> Clasif2000
-    Clasif2020 --> Coberturas2020
-    Clasif2010 --> Coberturas2010
-    Clasif2000 --> Coberturas2000
+
+    subgraph Clasificación final
+        ModeloOptimo --> Clasif2020
+        ModeloOptimo --> Clasif2010
+        ModeloOptimo --> Clasif2000
+        PC2020 --> Clasif2020
+        PC2010 --> Clasif2010
+        PC2000 --> Clasif2000
+        Clasif2020 --> Coberturas2020
+        Clasif2010 --> Coberturas2010
+        Clasif2000 --> Coberturas2000
+    end
 
     
     
