@@ -12,7 +12,8 @@ flowchart TD
     Test2020@{ shape: win-pane, label: Conjunto control}
     Valid2020@{ shape: win-pane, label: Conjunto validación}
 
-    Hyperparam@{ shape: win-pane, label: Hiperparámetros}
+    HyperparamSVM@{ shape: win-pane, label: Hiperparámetros}
+    HyperparamANN@{ shape: win-pane, label: Hiperparámetros}
     TrainSVM@{ shape: proc, label: Entrenamiento SVM}
     TrainANN@{ shape: proc, label: Entrenamiento ANN}
     ModeloSVM@{ shape: double-circle, label: Modelo SVM}
@@ -25,7 +26,8 @@ flowchart TD
     OptimANN@{ shape: diam, label: ANN optimo?}
     ControlSVM@{ shape: proc, label: Evaluación SVM}
     ControlANN@{ shape: proc, label: Evaluación ANN}
-    AjusteHyp@{ shape: proc, label: Ajuste Hyperp.}
+    AjusteHypSVM@{ shape: proc, label: Ajuste Hyperp.}
+    AjusteHypANN@{ shape: proc, label: Ajuste Hyperp.}
 
     PC2020 --> Muestreo
     Ref2020 --> Muestreo
@@ -34,24 +36,32 @@ flowchart TD
     Subset --15%--> Test2020
     Subset --15%--> Valid2020
 
-    Hyperparam ----> TrainSVM
-    Hyperparam ----> TrainANN
+    
+    
 
     subgraph SVM
+        HyperparamSVM ----> TrainSVM
         Train2020 --> TrainSVM
         TrainSVM --> ModeloSVM
         ModeloSVM --> ValidSVM
+        Valid2020 --> ValidSVM
         ValidSVM --> OptimSVM
         OptimSVM --si--> ModeloSVMok
+        OptimSVM --no--> AjusteHypSVM
+        AjusteHypSVM ----> HyperparamSVM
         ModeloSVMok --> ControlSVM
     end
 
     subgraph ANN
+        HyperparamANN ----> TrainANN
         Train2020 --> TrainANN
         TrainANN --> ModeloANN
         ModeloANN --> ValidANN
+        Valid2020 --> ValidANN
         ValidANN --> OptimANN
         OptimANN --si--> ModeloANNok
+        OptimANN --no--> AjusteHypANN
+        AjusteHypANN ----> HyperparamANN
         ModeloANNok --> ControlANN
     end
 
@@ -60,16 +70,10 @@ flowchart TD
     
     
     
-    Valid2020 --> ValidSVM
-    Valid2020 --> ValidANN
     
+
     
-    
-    
-    OptimSVM --no--> AjusteHyp
-    OptimANN --no--> AjusteHyp
-    AjusteHyp ----> Hyperparam
-    
+   
     
     Test2020 --> ControlSVM
     Test2020 --> ControlANN
