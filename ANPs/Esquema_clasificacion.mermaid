@@ -5,6 +5,7 @@ flowchart TD
     PC2000@{ shape: docs, label: PC2000}
     PC2010@{ shape: docs, label: PC2010}
     PC2020@{ shape: docs, label: PC2020}
+    PC2020A@{ shape: docs, label: PC2020}
     Ref2020@{ shape: doc, label: Referencia2020}
     Muestreo@{ shape: proc, label: Muestreo}
     Subset@{ shape: hex, label: Subdivision}
@@ -29,6 +30,15 @@ flowchart TD
     AjusteHypSVM@{ shape: proc, label: Ajuste Hyperp.}
     AjusteHypANN@{ shape: proc, label: Ajuste Hyperp.}
     Comparativa@{ shape: diam, label: Comparativa}
+    ModeloOptimo@{ shape: double-circle, label: Modelo óptimo}
+
+    Clasif2020{ shape: proc, label: Clasificación 2020}
+    Clasif2010{ shape: proc, label: Clasificación 2010}
+    Clasif2000{ shape: proc, label: Clasificación 2000}
+
+    Coberturas2020{ shape: doc, label: Coberturas 2020}
+    Coberturas2010{ shape: doc, label: Coberturas 2010}
+    Coberturas2000{ shape: doc, label: Coberturas 2000}
 
     PC2020 --> Muestreo
     Ref2020 --> Muestreo
@@ -68,6 +78,18 @@ flowchart TD
 
     ControlANN ----> Comparativa
     ControlSVM ----> Comparativa
+    Comparativa --> ModeloOptimo
+    ModeloOptimo --> Clasif2020
+    ModeloOptimo --> Clasif2010
+    ModeloOptimo --> Clasif2000
+    PC2020 --> Clasif2020
+    PC2010 --> Clasif2010
+    PC2000 --> Clasif2000
+    Clasif2020 --> Coberturas2020
+    Clasif2010 --> Coberturas2010
+    Clasif2000 --> Coberturas2000
+
+    
     
     
     
