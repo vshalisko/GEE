@@ -62,16 +62,15 @@ flowchart TD
         Landsat8==>INS
         Landsat7==>INS
         Landsat5==>INS
-
-        MDE-->NT
         Landsat8==>NT
         Landsat7==>NT
         Landsat5==>NT
-
-        INS-->MNS
         NT==>Combinacion1
+
+        MDE-->NT
+        INS-->MNS
         MNS-->Combinacion1
-        Combinacion1---|promedios|Combinacion2
+        Combinacion1===|promedios|Combinacion2
         
     end
 
