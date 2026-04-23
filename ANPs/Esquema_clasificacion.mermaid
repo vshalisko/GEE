@@ -64,7 +64,7 @@ flowchart TD
         OptimSVM --si--> ModeloSVMok
         OptimSVM --no--> AjusteHypSVM
         AjusteHypSVM ----> HyperparamSVM
-        ModeloSVMok --> ControlSVM
+        
     end
 
     subgraph ANN
@@ -75,9 +75,11 @@ flowchart TD
         OptimANN --si--> ModeloANNok
         OptimANN --no--> AjusteHypANN
         AjusteHypANN ----> HyperparamANN
-        ModeloANNok --> ControlANN
+        
     end
 
+    ModeloSVMok --> ControlSVM
+    ModeloANNok --> ControlANN
     ControlANN ----> Comparativa
     ControlSVM ----> Comparativa
     Comparativa ----> ModeloOptimo
