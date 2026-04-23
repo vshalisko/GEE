@@ -32,15 +32,15 @@ flowchart TD
     Comparativa@{ shape: diam, label: Comparativa}
     ModeloOptimo@{ shape: double-circle, label: Modelo óptimo}
 
-    Clasif2020{ shape: proc, label: Clasificación 2020}
-    Clasif2010{ shape: proc, label: Clasificación 2010}
-    Clasif2000{ shape: proc, label: Clasificación 2000}
+    Clasif2020@{ shape: proc, label: Clasificación 2020}
+    Clasif2010@{ shape: proc, label: Clasificación 2010}
+    Clasif2000@{ shape: proc, label: Clasificación 2000}
 
-    Coberturas2020{ shape: doc, label: Coberturas 2020}
-    Coberturas2010{ shape: doc, label: Coberturas 2010}
-    Coberturas2000{ shape: doc, label: Coberturas 2000}
+    Coberturas2020@{ shape: doc, label: Coberturas 2020}
+    Coberturas2010@{ shape: doc, label: Coberturas 2010}
+    Coberturas2000@{ shape: doc, label: Coberturas 2000}
 
-    PC2020 --> Muestreo
+    PC2020A --> Muestreo
     Ref2020 --> Muestreo
     Muestreo --> Subset
     Subset --70%--> Train2020
