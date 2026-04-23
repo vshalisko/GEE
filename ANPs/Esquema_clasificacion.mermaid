@@ -36,15 +36,17 @@ flowchart TD
     Subset --15%--> Test2020
     Subset --15%--> Valid2020
 
-    
-    
+    Train2020 --> TrainSVM    
+    Train2020 --> TrainANN    
+    Valid2020 --> ValidSVM
+    Valid2020 --> ValidANN
+    Test2020 --> ControlSVM
+    Test2020 --> ControlANN
 
     subgraph SVM
         HyperparamSVM ----> TrainSVM
-        Train2020 --> TrainSVM
         TrainSVM --> ModeloSVM
         ModeloSVM --> ValidSVM
-        Valid2020 --> ValidSVM
         ValidSVM --> OptimSVM
         OptimSVM --si--> ModeloSVMok
         OptimSVM --no--> AjusteHypSVM
@@ -54,10 +56,8 @@ flowchart TD
 
     subgraph ANN
         HyperparamANN ----> TrainANN
-        Train2020 --> TrainANN
         TrainANN --> ModeloANN
         ModeloANN --> ValidANN
-        Valid2020 --> ValidANN
         ValidANN --> OptimANN
         OptimANN --si--> ModeloANNok
         OptimANN --no--> AjusteHypANN
@@ -75,8 +75,7 @@ flowchart TD
     
    
     
-    Test2020 --> ControlSVM
-    Test2020 --> ControlANN
+
     
 
 
