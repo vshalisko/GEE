@@ -28,6 +28,7 @@ flowchart TD
     ControlANN@{ shape: proc, label: Evaluación ANN}
     AjusteHypSVM@{ shape: proc, label: Ajuste Hyperp.}
     AjusteHypANN@{ shape: proc, label: Ajuste Hyperp.}
+    Comparativa@{ shape: diam, label: Comparativa}
 
     PC2020 --> Muestreo
     Ref2020 --> Muestreo
@@ -65,7 +66,8 @@ flowchart TD
         ModeloANNok --> ControlANN
     end
 
-    
+    ControlANN ----> Comparativa
+    ControlSVM ----> Comparativa
     
     
     
