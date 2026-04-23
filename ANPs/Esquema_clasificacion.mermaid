@@ -40,12 +40,14 @@ flowchart TD
     Coberturas2010@{ shape: doc, label: Coberturas 2010}
     Coberturas2000@{ shape: doc, label: Coberturas 2000}
 
-    PC2020A --> Muestreo
-    Ref2020 --> Muestreo
-    Muestreo --> Subset
-    Subset --70%--> Train2020
-    Subset --15%--> Test2020
-    Subset --15%--> Valid2020
+    subgraph Subconjuntos
+        PC2020A --> Muestreo
+        Ref2020 --> Muestreo
+        Muestreo --> Subset
+        Subset --70%--> Train2020
+        Subset --15%--> Test2020
+        Subset --15%--> Valid2020
+    end
 
     Train2020 --> TrainSVM    
     Train2020 --> TrainANN    
