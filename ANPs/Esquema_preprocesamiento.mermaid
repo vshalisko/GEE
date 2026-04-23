@@ -75,37 +75,37 @@ flowchart TD
         
     end
 
-    Combinacion2---->BSecas2000
-    Combinacion2---->BLluvias2000
-    Combinacion2---->BSecas2010
-    Combinacion2---->BLluvias2010
-    Combinacion2---->BSecas2020
-    Combinacion2---->BLluvias2020
+    Combinacion2====>BSecas2000
+    Combinacion2====>BLluvias2000
+    Combinacion2====>BSecas2010
+    Combinacion2====>BLluvias2010
+    Combinacion2====>BSecas2020
+    Combinacion2====>BLluvias2020
 
     subgraph 2000
-        BSecas2000-->IndVeg2000
-        BLluvias2000-->Tass2000
-        BLluvias2000-->IndVeg2000
-        BSecas2000-->Tass2000
-        IndVeg2000-->Comb2000
-        Tass2000-->Comb2000
-        Comb2000-->Est2000
-        Est2000-->Capas2000
-        Capas2000-->TL2000
-        TL2000-->CapasPCA2000
+        BSecas2000==>IndVeg2000
+        BLluvias2000==>Tass2000
+        BLluvias2000==>IndVeg2000
+        BSecas2000==>Tass2000
+        IndVeg2000==>Comb2000
+        Tass2000==>Comb2000
+        Comb2000==>Est2000
+        Est2000==>Capas2000
+        Capas2000==>TL2000
+        TL2000==>CapasPCA2000
     end
 
     subgraph 2010
-        BSecas2010-->IndVeg2010
-        BLluvias2010-->Tass2010
-        BLluvias2010-->IndVeg2010
-        BSecas2010-->Tass2010
-        IndVeg2010-->Comb2010
-        Tass2010-->Comb2010
-        Comb2010-->Est2010
-        Est2010-->Capas2010
-        Capas2010-->TL2010
-        TL2010-->CapasPCA2010
+        BSecas2010==>IndVeg2010
+        BLluvias2010==>Tass2010
+        BLluvias2010==>IndVeg2010
+        BSecas2010==>Tass2010
+        IndVeg2010==>Comb2010
+        Tass2010==>Comb2010
+        Comb2010==>Est2010
+        Est2010==>Capas2010
+        Capas2010==>TL2010
+        TL2010==>CapasPCA2010
     end
 
     subgraph 2020
