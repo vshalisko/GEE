@@ -59,13 +59,15 @@ flowchart TD
     gee1---MDE
 
     subgraph preprocesamiento
-        Landsat8==>INS
-        Landsat7==>INS
-        Landsat5==>INS
-        Landsat8==>NT
-        Landsat7==>NT
-        Landsat5==>NT
-        NT==>Combinacion1
+        subraph fuentes principales
+            Landsat8==>INS
+            Landsat7==>INS
+            Landsat5==>INS
+            Landsat8==>NT
+            Landsat7==>NT
+            Landsat5==>NT
+            NT==>Combinacion1
+        end
 
         MDE-->NT
         INS-->MNS
