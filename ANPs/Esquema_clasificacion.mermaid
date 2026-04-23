@@ -29,7 +29,7 @@ flowchart TD
     ControlANN@{ shape: proc, label: Evaluación ANN}
     AjusteHypSVM@{ shape: proc, label: Ajuste Hyperp.}
     AjusteHypANN@{ shape: proc, label: Ajuste Hyperp.}
-    Comparativa@{ shape: diam, label: Comparativa}
+    Comparativa@{ shape: hex, label: Comparativa}
     ModeloOptimo@{ shape: double-circle, label: Modelo óptimo}
 
     Clasif2020@{ shape: proc, label: Clasificación 2020}
@@ -80,7 +80,7 @@ flowchart TD
 
     ControlANN ----> Comparativa
     ControlSVM ----> Comparativa
-    Comparativa --> ModeloOptimo
+    Comparativa ----> ModeloOptimo
 
     subgraph Clasificación final
         ModeloOptimo --> Clasif2020
