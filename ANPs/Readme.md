@@ -4,7 +4,7 @@
 
 #### Opciones de estandarización:
 * scikit-learn StandardScaler: escala las características para que tengan una media de cero (μ = 0) y una desviación estándar de uno (σ = 1)
-  $$z = \frac{x - \mu}{\sigma}\$$
+  $$x_{escalado} = \frac{x - \mu}{\sigma}\$$
 * scikit-learn RobustScaler: escala características numéricas restando la mediana y dividiendo por el Rango Intercuartílico (RIC o IQR).
   $$x_{escalado} = \frac{x - \text{mediana}}{IQR}\$$
   
